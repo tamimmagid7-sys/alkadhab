@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>الكذاب</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#FF6B35 0%,#F7931E 50%,#FFA500 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:10px}
+body.ltr{direction:ltr}
+.game-container{background:#FFF;border-radius:25px;box-shadow:0 20px 60px rgba(0,0,0,0.35);max-width:650px;width:100%;padding:35px;position:relative}
+.screen{display:none}
+.screen.active{display:block}
+h1{text-align:center;background:linear-gradient(135deg,#FF6B35,#F7931E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:30px;font-size:4em;font-weight:900;letter-spacing:-2px}
+h2{color:#FF6B35;margin-bottom:25px;text-align:center;font-size:2.6em;font-weight:900}
+.btn{width:100%;padding:28px;margin:14px 0;background:linear-gradient(135deg,#FF6B35 0%,#F7931E 100%);color:#fff;border:none;border-radius:18px;font-size:1.7em;font-weight:900;cursor:pointer;box-shadow:0 8px 25px rgba(255,107,53,0.45);transition:all 0.2s;text-transform:uppercase;letter-spacing:1.5px}
+.btn:active{transform:scale(0.96);box-shadow:0 4px 12px rgba(255,107,53,0.35)}
+.btn-secondary{background:linear-gradient(135deg,#757575 0%,#9E9E9E 100%);box-shadow:0 8px 25px rgba(0,0,0,0.25)}
+.input-group{margin:22px 0}
+.input-group label{display:block;margin-bottom:12px;color:#333;font-weight:900;font-size:1.5em}
+.input-group input,.input-group select{width:100%;padding:22px;border:4px solid #FFE0D6;border-radius:15px;font-size:1.4em;background:#FAFAFA;font-weight:600}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:#FF6B35;background:#fff;box-shadow:0 0 0 5px rgba(255,107,53,0.15)}
+.player-list{max-height:400px;overflow-y:auto;margin:25px 0;padding:5px}
+.player-item{background:linear-gradient(135deg,#FFF3E0 0%,#FFE0D6 100%);padding:22px;margin:14px 0;border-radius:15px;display:flex;justify-content:space-between;align-items:center;font-size:1.5em;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,0.12)}
+.remove-btn{background:#FF6B35;color:#fff;border:none;padding:14px 24px;border-radius:12px;cursor:pointer;font-weight:900;font-size:1.1em;transition:all 0.2s}
+.remove-btn:active{transform:scale(0.95);background:#E55A2B}
+.settings-item{display:flex;justify-content:space-between;align-items:center;padding:24px;background:linear-gradient(135deg,#FFF3E0 0%,#FFE0D6 100%);margin:18px 0;border-radius:15px;font-size:1.4em;font-weight:800}
+.toggle-btn{padding:14px 35px;background:#FF6B35;color:#fff;border:none;border-radius:12px;cursor:pointer;font-weight:900;font-size:1.5em;margin:0 8px;transition:all 0.2s}
+.toggle-btn:active{transform:scale(0.95);background:#E55A2B}
+.word-display{background:linear-gradient(135deg,#FF6B35 0%,#F7931E 100%);color:#fff;padding:70px 40px;border-radius:25px;text-align:center;margin:35px 0;font-size:3em;font-weight:900;box-shadow:0 12px 35px rgba(255,107,53,0.55);line-height:1.3}
+.instruction-box{background:linear-gradient(135deg,#FFF3E0 0%,#FFE0D6 100%);padding:35px;border-radius:18px;margin:28px 0;border-left:8px solid #FF6B35;font-size:1.5em;line-height:2;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
+.vote-item,.guess-option{background:linear-gradient(135deg,#FFF3E0 0%,#FFE0D6 100%);padding:28px;margin:15px 0;border-radius:18px;cursor:pointer;font-size:1.6em;text-align:center;font-weight:900;border:5px solid transparent;box-shadow:0 5px 18px rgba(0,0,0,0.12);transition:all 0.2s}
+.vote-item:active,.guess-option:active{background:linear-gradient(135deg,#FF6B35 0%,#F7931E 100%);color:#fff;border-color:#FF6B35;transform:scale(0.97);box-shadow:0 3px 10px rgba(255,107,53,0.4)}
+.result-box{text-align:center;padding:60px 40px;background:linear-gradient(135deg,#FFF3E0 0%,#FFE0D6 100%);border-radius:25px;margin:35px 0;box-shadow:0 12px 35px rgba(0,0,0,0.18)}
+.result-icon{font-size:7em;margin-bottom:30px}
+.result-box h3{font-size:3em;margin-bottom:30px;color:#FF6B35;font-weight:900}
+.result-box p{font-size:1.6em;margin:15px 0;line-height:2;font-weight:700;color:#333}
+.score-display{background:linear-gradient(135deg,#4CAF50 0%,#8BC34A 100%);color:#fff;padding:25px;border-radius:15px;margin:20px 0;font-size:1.8em;font-weight:900;text-align:center}
+.credits{text-align:center;padding:35px;line-height:2.8;font-size:1.5em}
+.credits h3{color:#FF6B35;font-size:2.4em;margin-bottom:25px;font-weight:900}
+.credits p{font-weight:700;color:#333}
+.back-btn{background:rgba(255,107,53,0.2);color:#FF6B35;border:4px solid #FF6B35;padding:14px 30px;border-radius:15px;cursor:pointer;font-size:1.6em;font-weight:900;margin-bottom:25px;transition:all 0.2s}
+.back-btn:active{background:#FF6B35;color:#fff;transform:scale(0.95)}
+.lang-switch{position:absolute;top:20px;right:20px;background:rgba(255,107,53,0.2);color:#FF6B35;border:4px solid #FF6B35;padding:12px 24px;border-radius:12px;cursor:pointer;font-weight:900;font-size:1.3em;transition:all 0.2s}
+.lang-switch:active{background:#FF6B35;color:#fff}
+body.ltr .lang-switch{right:auto;left:20px}
+@media (max-width:600px){h1{font-size:3.2em}h2{font-size:2.2em}.btn{font-size:1.5em;padding:24px}.word-display{font-size:2.4em;padding:60px 30px}}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#FFE0D6;border-radius:10px}
+::-webkit-scrollbar-thumb{background:#FF6B35;border-radius:10px}
+</style>
+</head>
+<body>
+<button class="lang-switch" id="langBtn">EN</button>
+<div class="game-container">
+<div id="mainMenu" class="screen active">
+<h1 data-ar="🎭 الكذاب" data-en="🎭 Al-Kadhab">🎭 الكذاب</h1>
+<button class="btn" id="btnStart" data-ar="🎮 ابدأ اللعبة" data-en="🎮 Start">🎮 ابدأ اللعبة</button>
+<button class="btn" id="btnHow" data-ar="📖 كيفية اللعب" data-en="📖 How to Play">📖 كيفية اللعب</button>
+<button class="btn" id="btnSet" data-ar="⚙️ الإعدادات" data-en="⚙️ Settings">⚙️ الإعدادات</button>
+<button class="btn" id="btnCred" data-ar="👨‍💻 المطور" data-en="👨‍💻 Developer">👨‍💻 المطور</button>
+</div>
+<div id="credits" class="screen">
+<button class="back-btn" id="back1">←</button>
+<h2 data-ar="👨‍💻 المطور" data-en="👨‍💻 Developer">👨‍💻 المطور</h2>
+<div class="credits">
+<h3 data-ar="لعبة الكذاب" data-en="Al-Kadhab">لعبة الكذاب</h3>
+<p data-ar="تطوير: تميم ماجد الجابري" data-en="Developer: Tamim Majed Aljabri">تطوير: تميم ماجد الجابري</p>
+<p data-ar="🎨 الإصدار 1.0" data-en="🎨 Version 1.0">🎨 الإصدار 1.0</p>
+</div>
+</div>
+<div id="howTo" class="screen">
+<button class="back-btn" id="back2">←</button>
+<h2 data-ar="📖 كيفية اللعب" data-en="📖 How to Play">📖 كيفية اللعب</h2>
+<div class="instruction-box">
+<p data-ar="1️⃣ أدخل أسماء اللاعبين (3 على الأقل)" data-en="1️⃣ Enter names (min 3)">1️⃣ أدخل أسماء اللاعبين (3 على الأقل)</p>
+<p data-ar="2️⃣ اختر عدد الكذابين" data-en="2️⃣ Choose liars">2️⃣ اختر عدد الكذابين</p>
+<p data-ar="3️⃣ كل لاعب يرى كلمته" data-en="3️⃣ Each sees word">3️⃣ كل لاعب يرى كلمته</p>
+<p data-ar="4️⃣ الكذاب يحصل على كلمة مختلفة" data-en="4️⃣ Liar gets different">4️⃣ الكذاب يحصل على كلمة مختلفة</p>
+<p data-ar="5️⃣ صوّتوا من يُطرد" data-en="5️⃣ Vote to eliminate">5️⃣ صوّتوا من يُطرد</p>
+<p data-ar="6️⃣ الكذاب يخمن الكلمة للفوز" data-en="6️⃣ Liar guesses to win">6️⃣ الكذاب يخمن الكلمة للفوز</p>
+</div>
+</div>
+<div id="settings" class="screen">
+<button class="back-btn" id="back3">←</button>
+<h2 data-ar="⚙️ الإعدادات" data-en="⚙️ Settings">⚙️ الإعدادات</h2>
+<div class="settings-item">
+<span data-ar="📏 حجم الشاشة" data-en="📏 Size">📏 حجم الشاشة</span>
+<div>
+<button class="toggle-btn" id="btnMinus">-</button>
+<button class="toggle-btn" id="btnPlus">+</button>
+</div>
+</div>
+<div class="input-group">
+<label data-ar="🖥️ الدقة" data-en="🖥️ Resolution">🖥️ الدقة</label>
+<select id="res">
+<option value="500">500px</option>
+<option value="650" selected>650px</option>
+<option value="800">800px</option>
+</select>
+</div>
+</div>
+<div id="setup" class="screen">
+<button class="back-btn" id="back4">←</button>
+<h2 data-ar="🎮 إعداد" data-en="🎮 Setup">🎮 إعداد</h2>
+<div class="input-group">
+<label data-ar="👤 اسم اللاعب" data-en="👤 Name">👤 اسم اللاعب</label>
+<input type="text" id="nameInput" data-ar-placeholder="أدخل الاسم" data-en-placeholder="Enter name">
+</div>
+<button class="btn" id="btnAdd" data-ar="➕ إضافة" data-en="➕ Add">➕ إضافة</button>
+<div class="player-list" id="list"></div>
+<div class="input-group">
+<label data-ar="🎭 عدد الكذابين" data-en="🎭 Liars">🎭 عدد الكذابين</label>
+<select id="liarCnt"><option value="1">1</option></select>
+</div>
+<button class="btn" id="btnPlay" data-ar="🚀 ابدأ" data-en="🚀 Start">🚀 ابدأ</button>
+</div>
+<div id="instruct" class="screen">
+<h2 data-ar="📋 تعليمات" data-en="📋 Info">📋 تعليمات</h2>
+<div class="instruction-box">
+<p data-ar="🎯 كل لاعب سيرى كلمته. لا تكشفها!" data-en="🎯 Each sees word. Don't reveal!">🎯 كل لاعب سيرى كلمته. لا تكشفها!</p>
+</div>
+<button class="btn" id="btnBegin" data-ar="▶️ التالي" data-en="▶️ Next">▶️ التالي</button>
+</div>
+<div id="pass" class="screen">
+<h2 data-ar="📱 مرر الجهاز" data-en="📱 Pass Phone">📱 مرر الجهاز</h2>
+<div class="instruction-box"><p id="passTxt"></p></div>
+<button class="btn" id="btnGot" data-ar="✅ استلمت" data-en="✅ Got it">✅ استلمت</button>
+</div>
+<div id="word" class="screen">
+<h2 data-ar="🎯 كلمتك" data-en="🎯 Word">🎯 كلمتك</h2>
+<div id="wordBox" class="word-display"></div>
+<button class="btn" id="btnNext" data-ar="▶️ التالي" data-en="▶️ Next">▶️ التالي</button>
+</div>
+<div id="question" class="screen">
+<h2 data-ar="❓ الأسئلة" data-en="❓ Questions">❓ الأسئلة</h2>
+<div class="instruction-box"><p id="qTxt"></p></div>
+<button class="btn" id="btnNextQ" data-ar="▶️ التالي" data-en="▶️ Next">▶️ التالي</button>
+<button class="btn btn-secondary" id="btnEndQ" data-ar="🛑 إنهاء" data-en="🛑 End">🛑 إنهاء</button>
+</div>
+<div id="voting" class="screen">
+<h2 data-ar="🗳️ التصويت" data-en="🗳️ Vote">🗳️ التصويت</h2>
+<div class="instruction-box"><p id="voteTxt"></p></div>
+<div id="voteOpts"></div>
+</div>
+<div id="guess" class="screen">
+<h2 data-ar="🎲 تخمين الكذاب" data-en="🎲 Liar Guess">🎲 تخمين الكذاب</h2>
+<div class="instruction-box"><p id="guessTxt"></p></div>
+<div id="guessOpts"></div>
+</div>
+<div id="result" class="screen">
+<h2 data-ar="🏆 النتيجة" data-en="🏆 Result">🏆 النتيجة</h2>
+<div class="score-display" id="scoreBox"></div>
+<div class="result-box" id="resultBox"></div>
+<button class="btn" id="btnMenu" data-ar="🏠 القائمة" data-en="🏠 Menu">🏠 القائمة</button>
+</div>
+</div>
+<script>
+let L='ar',P=[],LI=[],I=0,V={},VI=0,E='',G='',CS=0,LS=0;
+const W=[{ar:'منشفة',en:'Towel',o_ar:'ملابس',o_en:'Clothes'},{ar:'قلم',en:'Pen',o_ar:'ممحاة',o_en:'Eraser'},{ar:'سيارة',en:'Car',o_ar:'دراجة',o_en:'Bicycle'},{ar:'شمس',en:'Sun',o_ar:'قمر',o_en:'Moon'},{ar:'كتاب',en:'Book',o_ar:'مجلة',o_en:'Magazine'},{ar:'ماء',en:'Water',o_ar:'نار',o_en:'Fire'},{ar:'هاتف',en:'Phone',o_ar:'حاسوب',o_en:'Computer'},{ar:'قهوة',en:'Coffee',o_ar:'شاي',o_en:'Tea'},{ar:'باب',en:'Door',o_ar:'نافذة',o_en:'Window'},{ar:'طاولة',en:'Table',o_ar:'كرسي',o_en:'Chair'}];
+let SW=null;
+function $(i){return document.getElementById(i)}
+function S(s){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));$(s).classList.add('active')}
+function TL(){L=L==='ar'?'en':'ar';document.body.classList.toggle('ltr',L==='en');document.documentElement.setAttribute('lang',L);document.documentElement.setAttribute('dir',L==='ar'?'rtl':'ltr');UL()}
+function UL(){document.querySelectorAll('[data-ar]').forEach(e=>{if(e.tagName==='INPUT')e.placeholder=e.getAttribute('data-'+L+'-placeholder');else e.textContent=e.getAttribute('data-'+L)});UPL()}
+function AP(){const n=$('nameInput').value.trim();if(n&&!P.includes(n)){P.push(n);$('nameInput').value='';UPL();ULO()}}
+function UPL(){const l=$('list');l.innerHTML='';P.forEach((p,i)=>{const d=document.createElement('div');d.className='player-item';d.innerHTML=`<span>👤 ${p}</span><button class="remove-btn" data-i="${i}">❌</button>`;l.appendChild(d)});document.querySelectorAll('.remove-btn').forEach(b=>b.addEventListener('click',function(){RP(parseInt(this.getAttribute('data-i')))}))}
+function RP(i){P.splice(i,1);UPL();ULO()}
+function ULO(){const s=$('liarCnt');s.innerHTML='';if(P.length>=3)s.innerHTML+=`<option value="1">1</option>`;if(P.length>=5)s.innerHTML+=`<option value="2">2</option>`;if(P.length>=6)s.innerHTML+=`<option value="3">3</option>`}
+function SG(){if(P.length<3){alert(L==='ar'?'❌ يجب 3 لاعبين!':'❌ Need 3!');return}const lc=parseInt($('liarCnt').value);LI=[...P].sort(()=>0.5-Math.random()).slice(0,lc);SW=W[Math.floor(Math.random()*W.length)];I=VI=0;V={};E=G='';CS=LS=0;S('instruct')}
+function SPP(){$('passTxt').textContent=L==='ar'?`📱 مرر إلى ${P[I]}`:`📱 Pass to ${P[I]}`;S('pass')}
+function SHW(){const b=$('wordBox');b.textContent=L==='ar'?`كلمتك: ${LI.includes(P[I])?SW.o_ar:SW.ar}`:`Your word: ${LI.includes(P[I])?SW.o_en:SW.en}`;S('word')}
+function NP(){I++;if(I<P.length)SPP();else SQ()}
+function SQ(){const a=P[Math.floor(Math.random()*P.length)];let b=P[Math.floor(Math.random()*P.length)];while(b===a)b=P[Math.floor(Math.random()*P.length)];$('qTxt').textContent=L==='ar'?`${a}، اسأل ${b} سؤالاً`:`${a}, ask ${b}`;S('question')}
+function STV(){VI=0;SHV()}
+function SHV(){if(VI>=P.length){CR();return}$('voteTxt').textContent=L==='ar'?`${P[VI]}، من تصوت له؟`:`${P[VI]}, vote?`;const o=$('voteOpts');o.innerHTML='';P.forEach(p=>{if(p!==P[VI]){const d=document.createElement('div');d.className='vote-item';d.textContent=p;d.addEventListener('click',()=>CV(p));o.appendChild(d)}});S('voting')}
+function CV(p){V[p]=(V[p]||0)+1;VI++;SHV()}
+function CR(){let m=0;E='';for(let p in V){if(V[p]>m){m=V[p];E=p}}if(LI.includes(E)){CS=1;DF()}else{SLG()}}
+function SLG(){$('guessTxt').textContent=L==='ar'?`🎯 ${E} طُرد وهو ليس الكذاب! الآن الكذاب لديه فرصة لتخمين الكلمة الصحيحة. مرر الجهاز للكذاب.`:`🎯 ${E} eliminated but not the liar! Now liar gets chance to guess. Pass to liar.`;const o=$('guessOpts');o.innerHTML='';const c=L==='ar'?SW.ar:SW.en;const a=W.map(w=>L==='ar'?w.ar:w.en);let w=a.filter(x=>x!==c).sort(()=>0.5-Math.random()).slice(0,7);let ch=[...w,c].sort(()=>0.5-Math.random());ch.forEach(x=>{const d=document.createElement('div');d.className='guess-option';d.textContent=x;d.addEventListener('click',()=>SLG2(x));o.appendChild(d)});S('guess')}
+function SLG2(g){G=g;if(g===(L==='ar'?SW.ar:SW.en)){LS=1}else{CS=1}DF()}
+function DF(){const sb=$('scoreBox');const il=LI.includes(E);sb.innerHTML=L==='ar'?`<div>🏅 نقاط المواطنين: ${CS}</div><div>😈 نقاط الكذاب: ${LS}</div>`:`<div>🏅 Citizens Score: ${CS}</div><div>😈 Liar Score: ${LS}</div>`;const b=$('resultBox');if(CS>LS)b.innerHTML=`<div class="result-icon">🎉</div><h3>${L==='ar'?'المواطنون فازوا!':'Citizens Win!'}</h3><p>${L==='ar'?'الكلمة الصحيحة كانت: ':'Correct word was: '}${L==='ar'?SW.ar:SW.en}</p><p>${L==='ar'?'الكذابون كانوا: ':'Liars were: '}${LI.join(', ')}</p>`;else if(LS>CS)b.innerHTML=`<div class="result-icon">😈</div><h3>${L==='ar'?'الكذاب فاز!':'Liar Wins!'}</h3><p>${L==='ar'?'خمّن الكلمة الصحيحة: ':'Guessed correctly: '}${L==='ar'?SW.ar:SW.en}</p><p>${L==='ar'?'الكذابون كانوا: ':'Liars were: '}${LI.join(', ')}</p>`;else b.innerHTML=`<div class="result-icon">🤝</div><h3>${L==='ar'?'تعادل!':'Draw!'}</h3><p>${L==='ar'?'الكلمة: ':'Word: '}${L==='ar'?SW.ar:SW.en}</p>`;S('result')}
+function AS(a){const c=$('.game-container');const w=Math.max(300,Math.min(1200,c.offsetWidth+a));c.style.maxWidth=w+'px'}
+$('langBtn').addEventListener('click',TL);
+$('btnStart').addEventListener('click',()=>S('setup'));
+$('btnHow').addEventListener('click',()=>S('howTo'));
+$('btnSet').addEventListener('click',()=>S('settings'));
+$('btnCred').addEventListener('click',()=>S('credits'));
+$('back1').addEventListener('click',()=>S('mainMenu'));
+$('back2').addEventListener('click',()=>S('mainMenu'));
+$('back3').addEventListener('click',()=>S('mainMenu'));
+$('back4').addEventListener('click',()=>S('mainMenu'));
+$('btnAdd').addEventListener('click',AP);
+$('btnPlay').addEventListener('click',SG);
+$('btnBegin').addEventListener('click',SPP);
+$('btnGot').addEventListener('click',SHW);
+$('btnNext').addEventListener('click',NP);
+$('btnNextQ').addEventListener('click',SQ);
+$('btnEndQ').addEventListener('click',STV);
+$('btnMenu').addEventListener('click',()=>S('mainMenu'));
+$('btnMinus').addEventListener('click',()=>AS(-50));
+$('btnPlus').addEventListener('click',()=>AS(50));
+$('res').addEventListener('change',()=>$('.game-container').style.maxWidth=$('res').value+'px');
+</script>
+</body>
+</html>
