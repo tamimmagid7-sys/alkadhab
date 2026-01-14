@@ -1,205 +1,2082 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>الكذاب</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#FF6B35 0%,#F7931E 50%,#FFA500 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:10px}
-body.ltr{direction:ltr}
-.game-container{background:#FFF;border-radius:25px;box-shadow:0 20px 60px rgba(0,0,0,0.35);max-width:650px;width:100%;padding:35px;position:relative}
-.screen{display:none}
-.screen.active{display:block}
-h1{text-align:center;background:linear-gradient(135deg,#FF6B35,#F7931E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:30px;font-size:4em;font-weight:900;letter-spacing:-2px}
-h2{color:#FF6B35;margin-bottom:25px;text-align:center;font-size:2.6em;font-weight:900}
-.btn{width:100%;padding:28px;margin:14px 0;background:linear-gradient(135deg,#FF6B35 0%,#F7931E 100%);color:#fff;border:none;border-radius:18px;font-size:1.7em;font-weight:900;cursor:pointer;box-shadow:0 8px 25px rgba(255,107,53,0.45);transition:all 0.2s;text-transform:uppercase;letter-spacing:1.5px}
-.btn:active{transform:scale(0.96);box-shadow:0 4px 12px rgba(255,107,53,0.35)}
-.btn-secondary{background:linear-gradient(135deg,#757575 0%,#9E9E9E 100%);box-shadow:0 8px 25px rgba(0,0,0,0.25)}
-.input-group{margin:22px 0}
-.input-group label{display:block;margin-bottom:12px;color:#333;font-weight:900;font-size:1.5em}
-.input-group input,.input-group select{width:100%;padding:22px;border:4px solid #FFE0D6;border-radius:15px;font-size:1.4em;background:#FAFAFA;font-weight:600}
-.input-group input:focus,.input-group select:focus{outline:none;border-color:#FF6B35;background:#fff;box-shadow:0 0 0 5px rgba(255,107,53,0.15)}
-.player-list{max-height:400px;overflow-y:auto;margin:25px 0;padding:5px}
-.player-item{background:linear-gradient(135deg,#FFF3E0 0%,#FFE0D6 100%);padding:22px;margin:14px 0;border-radius:15px;display:flex;justify-content:space-between;align-items:center;font-size:1.5em;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,0.12)}
-.remove-btn{background:#FF6B35;color:#fff;border:none;padding:14px 24px;border-radius:12px;cursor:pointer;font-weight:900;font-size:1.1em;transition:all 0.2s}
-.remove-btn:active{transform:scale(0.95);background:#E55A2B}
-.settings-item{display:flex;justify-content:space-between;align-items:center;padding:24px;background:linear-gradient(135deg,#FFF3E0 0%,#FFE0D6 100%);margin:18px 0;border-radius:15px;font-size:1.4em;font-weight:800}
-.toggle-btn{padding:14px 35px;background:#FF6B35;color:#fff;border:none;border-radius:12px;cursor:pointer;font-weight:900;font-size:1.5em;margin:0 8px;transition:all 0.2s}
-.toggle-btn:active{transform:scale(0.95);background:#E55A2B}
-.word-display{background:linear-gradient(135deg,#FF6B35 0%,#F7931E 100%);color:#fff;padding:70px 40px;border-radius:25px;text-align:center;margin:35px 0;font-size:3em;font-weight:900;box-shadow:0 12px 35px rgba(255,107,53,0.55);line-height:1.3}
-.instruction-box{background:linear-gradient(135deg,#FFF3E0 0%,#FFE0D6 100%);padding:35px;border-radius:18px;margin:28px 0;border-left:8px solid #FF6B35;font-size:1.5em;line-height:2;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
-.vote-item,.guess-option{background:linear-gradient(135deg,#FFF3E0 0%,#FFE0D6 100%);padding:28px;margin:15px 0;border-radius:18px;cursor:pointer;font-size:1.6em;text-align:center;font-weight:900;border:5px solid transparent;box-shadow:0 5px 18px rgba(0,0,0,0.12);transition:all 0.2s}
-.vote-item:active,.guess-option:active{background:linear-gradient(135deg,#FF6B35 0%,#F7931E 100%);color:#fff;border-color:#FF6B35;transform:scale(0.97);box-shadow:0 3px 10px rgba(255,107,53,0.4)}
-.result-box{text-align:center;padding:60px 40px;background:linear-gradient(135deg,#FFF3E0 0%,#FFE0D6 100%);border-radius:25px;margin:35px 0;box-shadow:0 12px 35px rgba(0,0,0,0.18)}
-.result-icon{font-size:7em;margin-bottom:30px}
-.result-box h3{font-size:3em;margin-bottom:30px;color:#FF6B35;font-weight:900}
-.result-box p{font-size:1.6em;margin:15px 0;line-height:2;font-weight:700;color:#333}
-.score-display{background:linear-gradient(135deg,#4CAF50 0%,#8BC34A 100%);color:#fff;padding:25px;border-radius:15px;margin:20px 0;font-size:1.8em;font-weight:900;text-align:center}
-.credits{text-align:center;padding:35px;line-height:2.8;font-size:1.5em}
-.credits h3{color:#FF6B35;font-size:2.4em;margin-bottom:25px;font-weight:900}
-.credits p{font-weight:700;color:#333}
-.back-btn{background:rgba(255,107,53,0.2);color:#FF6B35;border:4px solid #FF6B35;padding:14px 30px;border-radius:15px;cursor:pointer;font-size:1.6em;font-weight:900;margin-bottom:25px;transition:all 0.2s}
-.back-btn:active{background:#FF6B35;color:#fff;transform:scale(0.95)}
-.lang-switch{position:absolute;top:20px;right:20px;background:rgba(255,107,53,0.2);color:#FF6B35;border:4px solid #FF6B35;padding:12px 24px;border-radius:12px;cursor:pointer;font-weight:900;font-size:1.3em;transition:all 0.2s}
-.lang-switch:active{background:#FF6B35;color:#fff}
-body.ltr .lang-switch{right:auto;left:20px}
-@media (max-width:600px){h1{font-size:3.2em}h2{font-size:2.2em}.btn{font-size:1.5em;padding:24px}.word-display{font-size:2.4em;padding:60px 30px}}
-::-webkit-scrollbar{width:10px}
-::-webkit-scrollbar-track{background:#FFE0D6;border-radius:10px}
-::-webkit-scrollbar-thumb{background:#FF6B35;border-radius:10px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الكذاب | Al-Kadhab v1.2</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        :root {
+            --text-size: 1rem;
+            --button-size: 1rem;
+            --title-size: 2.5rem;
+        }
+
+        .large-text { --text-size: 1.3rem; --button-size: 1.3rem; --title-size: 3rem; }
+        .xlarge-text { --text-size: 1.6rem; --button-size: 1.6rem; --title-size: 3.5rem; }
+        .large-buttons .btn { padding: 25px 40px; }
+        .xlarge-buttons .btn { padding: 30px 50px; }
+
+        /* Mobile specific sizes */
+        @media (max-width: 768px) {
+            :root {
+                --text-size: 0.9rem;
+                --button-size: 0.9rem;
+                --title-size: 2rem;
+            }
+            
+            .large-text { 
+                --text-size: 1.1rem; 
+                --button-size: 1.1rem; 
+                --title-size: 2.3rem; 
+            }
+            .xlarge-text { 
+                --text-size: 1.3rem; 
+                --button-size: 1.3rem; 
+                --title-size: 2.6rem; 
+            }
+            
+            .container {
+                padding: 10px !important;
+            }
+            
+            .btn {
+                padding: 15px 25px !important;
+                min-width: 150px !important;
+                margin: 5px !important;
+            }
+            
+            .header {
+                padding: 20px 0 !important;
+                margin-bottom: 20px !important;
+            }
+            
+            .menu-buttons {
+                gap: 10px !important;
+            }
+            
+            .game-title {
+                font-size: calc(var(--title-size) * 0.8) !important;
+            }
+            
+            .word-display {
+                font-size: calc(var(--text-size) * 1.8) !important;
+                margin: 20px 0 !important;
+            }
+        }
+
+        /* Small mobile */
+        @media (max-width: 480px) {
+            :root {
+                --text-size: 0.8rem;
+                --button-size: 0.8rem;
+                --title-size: 1.8rem;
+            }
+            
+            .large-text { 
+                --text-size: 1rem; 
+                --button-size: 1rem; 
+                --title-size: 2rem; 
+            }
+            .xlarge-text { 
+                --text-size: 1.2rem; 
+                --button-size: 1.2rem; 
+                --title-size: 2.2rem; 
+            }
+            
+            .btn {
+                padding: 12px 20px !important;
+                min-width: 130px !important;
+                font-size: calc(var(--button-size) * 0.9) !important;
+            }
+            
+            .menu-buttons {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .player-inputs {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+            
+            .voting-options {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+            
+            .mode-selection {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+            
+            .settings-grid {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-size: var(--text-size);
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px #ff6b6b; }
+            50% { box-shadow: 0 0 20px #ff6b6b; }
+            100% { box-shadow: 0 0 5px #ff6b6b; }
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            margin-bottom: 40px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,107,107,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .game-title {
+            font-size: var(--title-size);
+            background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcf7f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+            font-weight: 900;
+            position: relative;
+            text-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+            animation: pulse 3s infinite;
+        }
+
+        .version {
+            font-size: calc(var(--text-size) * 0.8);
+            color: #ffd93d;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 20px 35px;
+            font-size: var(--button-size);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            min-width: 220px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+            touch-action: manipulation;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::after {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            animation: glow 2s infinite;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        }
+
+        .btn-small {
+            padding: 15px 25px;
+            font-size: calc(var(--button-size) * 0.9);
+            min-width: 160px;
+        }
+
+        /* Menu Screen */
+        .menu-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .menu-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Player Setup */
+        .player-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-label {
+            font-size: calc(var(--text-size) * 1.1);
+            color: #ffd93d;
+            font-weight: 600;
+        }
+
+        .form-input {
+            padding: 18px 20px;
+            border: 2px solid #4ecdc4;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: var(--text-size);
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
+            transform: scale(1.02);
+        }
+
+        /* Game Screen */
+        .game-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .instruction-box {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px 0;
+            border: 3px solid #4ecdc4;
+            animation: pulse 2s infinite;
+        }
+
+        .word-display {
+            font-size: calc(var(--text-size) * 2.5);
+            font-weight: 900;
+            color: #ffd93d;
+            margin: 40px 0;
+            text-shadow: 0 0 20px rgba(255, 217, 61, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+
+        .liar-hint {
+            color: #ff6b6b;
+            font-size: calc(var(--text-size) * 0.9);
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .warning {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 1px solid #ff6b6b;
+        }
+
+        /* Voting Screen */
+        .voting-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .vote-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #4ecdc4;
+            padding: 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: var(--text-size);
+            color: white;
+        }
+
+        .vote-btn:hover {
+            background: rgba(78, 205, 196, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .vote-btn.selected {
+            background: rgba(255, 107, 107, 0.3);
+            border-color: #ff6b6b;
+            animation: glow 1.5s infinite;
+        }
+
+        /* Word Choice Screen */
+        .word-choices {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 40px 0;
+        }
+
+        .word-choice-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #4ecdc4;
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: calc(var(--text-size) * 1.2);
+            color: white;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .word-choice-btn:hover {
+            background: rgba(78, 205, 196, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .word-choice-btn.correct {
+            background: rgba(107, 207, 127, 0.3);
+            border-color: #6bcf7f;
+            animation: pulse 1s infinite;
+        }
+
+        .word-choice-btn.wrong {
+            background: rgba(255, 107, 107, 0.3);
+            border-color: #ff6b6b;
+        }
+
+        /* Results Screen */
+        .results-box {
+            background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(38,38,38,0.9));
+            padding: 50px;
+            border-radius: 25px;
+            margin: 40px auto;
+            max-width: 800px;
+            border: 3px solid;
+            animation: fadeIn 1s ease;
+        }
+
+        .winner-text {
+            font-size: calc(var(--text-size) * 2);
+            font-weight: 900;
+            margin: 30px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .players-reveal {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .player-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .player-card.liar {
+            background: rgba(255, 107, 107, 0.2);
+            border: 2px solid #ff6b6b;
+            animation: pulse 2s infinite;
+        }
+
+        .player-card.normal {
+            background: rgba(78, 205, 196, 0.2);
+            border: 2px solid #4ecdc4;
+        }
+
+        /* Settings Screen */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .setting-group {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid #6bcf7f;
+        }
+
+        .setting-title {
+            color: #6bcf7f;
+            font-size: calc(var(--text-size) * 1.2);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .slider-container {
+            margin: 25px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #ffd93d;
+        }
+
+        .slider {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 34px;
+            margin: 0 15px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #6bcf7f;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(36px);
+        }
+
+        /* Language Toggle */
+        .language-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .lang-btn {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: 2px solid #ffd93d;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: calc(var(--text-size) * 0.9);
+            transition: all 0.3s ease;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 217, 61, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Game Mode Selection */
+        .mode-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .mode-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px 30px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-10px);
+            border-color: #ffd93d;
+            background: rgba(255, 217, 61, 0.1);
+        }
+
+        .mode-card.selected {
+            background: rgba(107, 207, 127, 0.2);
+            border-color: #6bcf7f;
+            animation: pulse 2s infinite;
+        }
+
+        .mode-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ffd93d;
+        }
+
+        .mode-title {
+            font-size: calc(var(--text-size) * 1.3);
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #ffd93d;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 </head>
-<body>
-<button class="lang-switch" id="langBtn">EN</button>
-<div class="game-container">
-<div id="mainMenu" class="screen active">
-<h1 data-ar="🎭 الكذاب" data-en="🎭 Al-Kadhab">🎭 الكذاب</h1>
-<button class="btn" id="btnStart" data-ar="🎮 ابدأ اللعبة" data-en="🎮 Start">🎮 ابدأ اللعبة</button>
-<button class="btn" id="btnHow" data-ar="📖 كيفية اللعب" data-en="📖 How to Play">📖 كيفية اللعب</button>
-<button class="btn" id="btnSet" data-ar="⚙️ الإعدادات" data-en="⚙️ Settings">⚙️ الإعدادات</button>
-<button class="btn" id="btnCred" data-ar="👨‍💻 المطور" data-en="👨‍💻 Developer">👨‍💻 المطور</button>
-</div>
-<div id="credits" class="screen">
-<button class="back-btn" id="back1">←</button>
-<h2 data-ar="👨‍💻 المطور" data-en="👨‍💻 Developer">👨‍💻 المطور</h2>
-<div class="credits">
-<h3 data-ar="لعبة الكذاب" data-en="Al-Kadhab">لعبة الكذاب</h3>
-<p data-ar="تطوير: تميم ماجد الجابري" data-en="Developer: Tamim Majed Aljabri">تطوير: تميم ماجد الجابري</p>
-<p data-ar="🎨 الإصدار 1.0" data-en="🎨 Version 1.0">🎨 الإصدار 1.0</p>
-</div>
-</div>
-<div id="howTo" class="screen">
-<button class="back-btn" id="back2">←</button>
-<h2 data-ar="📖 كيفية اللعب" data-en="📖 How to Play">📖 كيفية اللعب</h2>
-<div class="instruction-box">
-<p data-ar="1️⃣ أدخل أسماء اللاعبين (3 على الأقل)" data-en="1️⃣ Enter names (min 3)">1️⃣ أدخل أسماء اللاعبين (3 على الأقل)</p>
-<p data-ar="2️⃣ اختر عدد الكذابين" data-en="2️⃣ Choose liars">2️⃣ اختر عدد الكذابين</p>
-<p data-ar="3️⃣ كل لاعب يرى كلمته" data-en="3️⃣ Each sees word">3️⃣ كل لاعب يرى كلمته</p>
-<p data-ar="4️⃣ الكذاب يحصل على كلمة مختلفة" data-en="4️⃣ Liar gets different">4️⃣ الكذاب يحصل على كلمة مختلفة</p>
-<p data-ar="5️⃣ صوّتوا من يُطرد" data-en="5️⃣ Vote to eliminate">5️⃣ صوّتوا من يُطرد</p>
-<p data-ar="6️⃣ الكذاب يخمن الكلمة للفوز" data-en="6️⃣ Liar guesses to win">6️⃣ الكذاب يخمن الكلمة للفوز</p>
-</div>
-</div>
-<div id="settings" class="screen">
-<button class="back-btn" id="back3">←</button>
-<h2 data-ar="⚙️ الإعدادات" data-en="⚙️ Settings">⚙️ الإعدادات</h2>
-<div class="settings-item">
-<span data-ar="📏 حجم الشاشة" data-en="📏 Size">📏 حجم الشاشة</span>
-<div>
-<button class="toggle-btn" id="btnMinus">-</button>
-<button class="toggle-btn" id="btnPlus">+</button>
-</div>
-</div>
-<div class="input-group">
-<label data-ar="🖥️ الدقة" data-en="🖥️ Resolution">🖥️ الدقة</label>
-<select id="res">
-<option value="500">500px</option>
-<option value="650" selected>650px</option>
-<option value="800">800px</option>
-</select>
-</div>
-</div>
-<div id="setup" class="screen">
-<button class="back-btn" id="back4">←</button>
-<h2 data-ar="🎮 إعداد" data-en="🎮 Setup">🎮 إعداد</h2>
-<div class="input-group">
-<label data-ar="👤 اسم اللاعب" data-en="👤 Name">👤 اسم اللاعب</label>
-<input type="text" id="nameInput" data-ar-placeholder="أدخل الاسم" data-en-placeholder="Enter name">
-</div>
-<button class="btn" id="btnAdd" data-ar="➕ إضافة" data-en="➕ Add">➕ إضافة</button>
-<div class="player-list" id="list"></div>
-<div class="input-group">
-<label data-ar="🎭 عدد الكذابين" data-en="🎭 Liars">🎭 عدد الكذابين</label>
-<select id="liarCnt"><option value="1">1</option></select>
-</div>
-<button class="btn" id="btnPlay" data-ar="🚀 ابدأ" data-en="🚀 Start">🚀 ابدأ</button>
-</div>
-<div id="instruct" class="screen">
-<h2 data-ar="📋 تعليمات" data-en="📋 Info">📋 تعليمات</h2>
-<div class="instruction-box">
-<p data-ar="🎯 كل لاعب سيرى كلمته. لا تكشفها!" data-en="🎯 Each sees word. Don't reveal!">🎯 كل لاعب سيرى كلمته. لا تكشفها!</p>
-</div>
-<button class="btn" id="btnBegin" data-ar="▶️ التالي" data-en="▶️ Next">▶️ التالي</button>
-</div>
-<div id="pass" class="screen">
-<h2 data-ar="📱 مرر الجهاز" data-en="📱 Pass Phone">📱 مرر الجهاز</h2>
-<div class="instruction-box"><p id="passTxt"></p></div>
-<button class="btn" id="btnGot" data-ar="✅ استلمت" data-en="✅ Got it">✅ استلمت</button>
-</div>
-<div id="word" class="screen">
-<h2 data-ar="🎯 كلمتك" data-en="🎯 Word">🎯 كلمتك</h2>
-<div id="wordBox" class="word-display"></div>
-<button class="btn" id="btnNext" data-ar="▶️ التالي" data-en="▶️ Next">▶️ التالي</button>
-</div>
-<div id="question" class="screen">
-<h2 data-ar="❓ الأسئلة" data-en="❓ Questions">❓ الأسئلة</h2>
-<div class="instruction-box"><p id="qTxt"></p></div>
-<button class="btn" id="btnNextQ" data-ar="▶️ التالي" data-en="▶️ Next">▶️ التالي</button>
-<button class="btn btn-secondary" id="btnEndQ" data-ar="🛑 إنهاء" data-en="🛑 End">🛑 إنهاء</button>
-</div>
-<div id="voting" class="screen">
-<h2 data-ar="🗳️ التصويت" data-en="🗳️ Vote">🗳️ التصويت</h2>
-<div class="instruction-box"><p id="voteTxt"></p></div>
-<div id="voteOpts"></div>
-</div>
-<div id="guess" class="screen">
-<h2 data-ar="🎲 تخمين الكذاب" data-en="🎲 Liar Guess">🎲 تخمين الكذاب</h2>
-<div class="instruction-box"><p id="guessTxt"></p></div>
-<div id="guessOpts"></div>
-</div>
-<div id="result" class="screen">
-<h2 data-ar="🏆 النتيجة" data-en="🏆 Result">🏆 النتيجة</h2>
-<div class="score-display" id="scoreBox"></div>
-<div class="result-box" id="resultBox"></div>
-<button class="btn" id="btnMenu" data-ar="🏠 القائمة" data-en="🏠 Menu">🏠 القائمة</button>
-</div>
-</div>
-<script>
-let L='ar',P=[],LI=[],I=0,V={},VI=0,E='',G='',CS=0,LS=0;
-const W=[{ar:'منشفة',en:'Towel',o_ar:'ملابس',o_en:'Clothes'},{ar:'قلم',en:'Pen',o_ar:'ممحاة',o_en:'Eraser'},{ar:'سيارة',en:'Car',o_ar:'دراجة',o_en:'Bicycle'},{ar:'شمس',en:'Sun',o_ar:'قمر',o_en:'Moon'},{ar:'كتاب',en:'Book',o_ar:'مجلة',o_en:'Magazine'},{ar:'ماء',en:'Water',o_ar:'نار',o_en:'Fire'},{ar:'هاتف',en:'Phone',o_ar:'حاسوب',o_en:'Computer'},{ar:'قهوة',en:'Coffee',o_ar:'شاي',o_en:'Tea'},{ar:'باب',en:'Door',o_ar:'نافذة',o_en:'Window'},{ar:'طاولة',en:'Table',o_ar:'كرسي',o_en:'Chair'}];
-let SW=null;
-function $(i){return document.getElementById(i)}
-function S(s){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));$(s).classList.add('active')}
-function TL(){L=L==='ar'?'en':'ar';document.body.classList.toggle('ltr',L==='en');document.documentElement.setAttribute('lang',L);document.documentElement.setAttribute('dir',L==='ar'?'rtl':'ltr');UL()}
-function UL(){document.querySelectorAll('[data-ar]').forEach(e=>{if(e.tagName==='INPUT')e.placeholder=e.getAttribute('data-'+L+'-placeholder');else e.textContent=e.getAttribute('data-'+L)});UPL()}
-function AP(){const n=$('nameInput').value.trim();if(n&&!P.includes(n)){P.push(n);$('nameInput').value='';UPL();ULO()}}
-function UPL(){const l=$('list');l.innerHTML='';P.forEach((p,i)=>{const d=document.createElement('div');d.className='player-item';d.innerHTML=`<span>👤 ${p}</span><button class="remove-btn" data-i="${i}">❌</button>`;l.appendChild(d)});document.querySelectorAll('.remove-btn').forEach(b=>b.addEventListener('click',function(){RP(parseInt(this.getAttribute('data-i')))}))}
-function RP(i){P.splice(i,1);UPL();ULO()}
-function ULO(){const s=$('liarCnt');s.innerHTML='';if(P.length>=3)s.innerHTML+=`<option value="1">1</option>`;if(P.length>=5)s.innerHTML+=`<option value="2">2</option>`;if(P.length>=6)s.innerHTML+=`<option value="3">3</option>`}
-function SG(){if(P.length<3){alert(L==='ar'?'❌ يجب 3 لاعبين!':'❌ Need 3!');return}const lc=parseInt($('liarCnt').value);LI=[...P].sort(()=>0.5-Math.random()).slice(0,lc);SW=W[Math.floor(Math.random()*W.length)];I=VI=0;V={};E=G='';CS=LS=0;S('instruct')}
-function SPP(){$('passTxt').textContent=L==='ar'?`📱 مرر إلى ${P[I]}`:`📱 Pass to ${P[I]}`;S('pass')}
-function SHW(){const b=$('wordBox');b.textContent=L==='ar'?`كلمتك: ${LI.includes(P[I])?SW.o_ar:SW.ar}`:`Your word: ${LI.includes(P[I])?SW.o_en:SW.en}`;S('word')}
-function NP(){I++;if(I<P.length)SPP();else SQ()}
-function SQ(){const a=P[Math.floor(Math.random()*P.length)];let b=P[Math.floor(Math.random()*P.length)];while(b===a)b=P[Math.floor(Math.random()*P.length)];$('qTxt').textContent=L==='ar'?`${a}، اسأل ${b} سؤالاً`:`${a}, ask ${b}`;S('question')}
-function STV(){VI=0;SHV()}
-function SHV(){if(VI>=P.length){CR();return}$('voteTxt').textContent=L==='ar'?`${P[VI]}، من تصوت له؟`:`${P[VI]}, vote?`;const o=$('voteOpts');o.innerHTML='';P.forEach(p=>{if(p!==P[VI]){const d=document.createElement('div');d.className='vote-item';d.textContent=p;d.addEventListener('click',()=>CV(p));o.appendChild(d)}});S('voting')}
-function CV(p){V[p]=(V[p]||0)+1;VI++;SHV()}
-function CR(){let m=0;E='';for(let p in V){if(V[p]>m){m=V[p];E=p}}if(LI.includes(E)){CS=1;DF()}else{SLG()}}
-function SLG(){$('guessTxt').textContent=L==='ar'?`🎯 ${E} طُرد وهو ليس الكذاب! الآن الكذاب لديه فرصة لتخمين الكلمة الصحيحة. مرر الجهاز للكذاب.`:`🎯 ${E} eliminated but not the liar! Now liar gets chance to guess. Pass to liar.`;const o=$('guessOpts');o.innerHTML='';const c=L==='ar'?SW.ar:SW.en;const a=W.map(w=>L==='ar'?w.ar:w.en);let w=a.filter(x=>x!==c).sort(()=>0.5-Math.random()).slice(0,7);let ch=[...w,c].sort(()=>0.5-Math.random());ch.forEach(x=>{const d=document.createElement('div');d.className='guess-option';d.textContent=x;d.addEventListener('click',()=>SLG2(x));o.appendChild(d)});S('guess')}
-function SLG2(g){G=g;if(g===(L==='ar'?SW.ar:SW.en)){LS=1}else{CS=1}DF()}
-function DF(){const sb=$('scoreBox');const il=LI.includes(E);sb.innerHTML=L==='ar'?`<div>🏅 نقاط المواطنين: ${CS}</div><div>😈 نقاط الكذاب: ${LS}</div>`:`<div>🏅 Citizens Score: ${CS}</div><div>😈 Liar Score: ${LS}</div>`;const b=$('resultBox');if(CS>LS)b.innerHTML=`<div class="result-icon">🎉</div><h3>${L==='ar'?'المواطنون فازوا!':'Citizens Win!'}</h3><p>${L==='ar'?'الكلمة الصحيحة كانت: ':'Correct word was: '}${L==='ar'?SW.ar:SW.en}</p><p>${L==='ar'?'الكذابون كانوا: ':'Liars were: '}${LI.join(', ')}</p>`;else if(LS>CS)b.innerHTML=`<div class="result-icon">😈</div><h3>${L==='ar'?'الكذاب فاز!':'Liar Wins!'}</h3><p>${L==='ar'?'خمّن الكلمة الصحيحة: ':'Guessed correctly: '}${L==='ar'?SW.ar:SW.en}</p><p>${L==='ar'?'الكذابون كانوا: ':'Liars were: '}${LI.join(', ')}</p>`;else b.innerHTML=`<div class="result-icon">🤝</div><h3>${L==='ar'?'تعادل!':'Draw!'}</h3><p>${L==='ar'?'الكلمة: ':'Word: '}${L==='ar'?SW.ar:SW.en}</p>`;S('result')}
-function AS(a){const c=$('.game-container');const w=Math.max(300,Math.min(1200,c.offsetWidth+a));c.style.maxWidth=w+'px'}
-$('langBtn').addEventListener('click',TL);
-$('btnStart').addEventListener('click',()=>S('setup'));
-$('btnHow').addEventListener('click',()=>S('howTo'));
-$('btnSet').addEventListener('click',()=>S('settings'));
-$('btnCred').addEventListener('click',()=>S('credits'));
-$('back1').addEventListener('click',()=>S('mainMenu'));
-$('back2').addEventListener('click',()=>S('mainMenu'));
-$('back3').addEventListener('click',()=>S('mainMenu'));
-$('back4').addEventListener('click',()=>S('mainMenu'));
-$('btnAdd').addEventListener('click',AP);
-$('btnPlay').addEventListener('click',SG);
-$('btnBegin').addEventListener('click',SPP);
-$('btnGot').addEventListener('click',SHW);
-$('btnNext').addEventListener('click',NP);
-$('btnNextQ').addEventListener('click',SQ);
-$('btnEndQ').addEventListener('click',STV);
-$('btnMenu').addEventListener('click',()=>S('mainMenu'));
-$('btnMinus').addEventListener('click',()=>AS(-50));
-$('btnPlus').addEventListener('click',()=>AS(50));
-$('res').addEventListener('change',()=>$('.game-container').style.maxWidth=$('res').value+'px');
-</script>
+<body class="arabic">
+    <div class="language-toggle">
+        <button class="lang-btn" onclick="toggleLanguage()">English</button>
+    </div>
+
+    <div class="container">
+        <!-- Main Menu Screen -->
+        <div class="screen active" id="menuScreen">
+            <div class="header">
+                <div class="version" data-ar="الإصدار v1.2" data-en="Version v1.2">الإصدار v1.2</div>
+                <h1 class="game-title" data-ar="الكذاب" data-en="Al-Kadhab">الكذاب</h1>
+                <div class="subtitle" data-ar="لعبة الكذب والذكاء" data-en="The Liar Game">لعبة الكذب والذكاء</div>
+            </div>
+            
+            <div class="menu-screen">
+                <div class="menu-buttons">
+                    <button class="btn btn-primary btn-large" onclick="startGame()">
+                        <span data-ar="🎮 ابدأ اللعبة" data-en="🎮 Start Game">🎮 ابدأ اللعبة</span>
+                    </button>
+                    <button class="btn" onclick="showScreen('howToPlayScreen')">
+                        <span data-ar="📖 كيف تلعب" data-en="📖 How to Play">📖 كيف تلعب</span>
+                    </button>
+                    <button class="btn" onclick="showScreen('settingsScreen')">
+                        <span data-ar="⚙️ الإعدادات" data-en="⚙️ Settings">⚙️ الإعدادات</span>
+                    </button>
+                    <button class="btn" onclick="showScreen('creditsScreen')">
+                        <span data-ar="👤 المطور" data-en="👤 Developer">👤 المطور</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Credits Screen -->
+        <div class="screen" id="creditsScreen">
+            <div class="header">
+                <h1 class="game-title" data-ar="المطور" data-en="Developer">المطور</h1>
+            </div>
+            
+            <div class="credits-screen">
+                <div style="font-size: 2em; margin: 30px 0;">✨</div>
+                <h2 style="color: #ffd93d; margin-bottom: 30px;">تميم ماجد الجبري</h2>
+                <p style="font-size: 1.2em; margin: 20px 0; line-height: 1.8;">
+                    <span data-ar="هاذي اللعبة من تطوير وإبداع تميم الجبري<br>كل الأفكار والتصميم والبرمجة من عنده<br>الله يعطيه العافية ويسهل أمره" 
+                          data-en="This game is developed by Tamim Aljabri<br>All ideas, design, and programming by him<br>May God bless him and ease his path">
+                        هاذي اللعبة من تطوير وإبداع تميم الجبري<br>كل الأفكار والتصميم والبرمجة من عنده<br>الله يعطيه العافية ويسهل أمره
+                    </span>
+                </p>
+                <div style="margin-top: 50px;">
+                    <button class="btn btn-secondary" onclick="showScreen('menuScreen')">
+                        <span data-ar="رجع للقائمة" data-en="Back to Menu">رجع للقائمة</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to Play Screen -->
+        <div class="screen" id="howToPlayScreen">
+            <div class="header">
+                <h1 class="game-title" data-ar="كيف تلعب" data-en="How to Play">كيف تلعب</h1>
+            </div>
+            
+            <div class="tutorial-screen">
+                <div class="tutorial-steps">
+                    <h3 style="color: #ffd93d; margin-bottom: 25px; font-size: 1.4em;">
+                        <span data-ar="🚀 طريقة اللعب:" data-en="🚀 How to Play:">🚀 طريقة اللعب:</span>
+                    </h3>
+                    
+                    <div style="text-align: right; margin: 20px 0; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px;">
+                        <p style="margin: 15px 0; font-size: 1.1em;" data-ar="١. سجل أسماء اللاعبين (على الأقل ٣ أشخاص)" data-en="1. Enter player names (minimum 3 people)">١. سجل أسماء اللاعبين (على الأقل ٣ أشخاص)</p>
+                        <p style="margin: 15px 0; font-size: 1.1em;" data-ar="٢. اختر عدد الكذابين اللي تبيهم" data-en="2. Choose how many liars you want">٢. اختر عدد الكذابين اللي تبيهم</p>
+                        <p style="margin: 15px 0; font-size: 1.1em;" data-ar="٣. كل لاعب بيشوف كلمته على الخاص" data-en="3. Each player sees their word privately">٣. كل لاعب بيشوف كلمته على الخاص</p>
+                        <p style="margin: 15px 0; font-size: 1.1em;" data-ar="٤. الكذاب بيشوف كلمة مختلفة عن الباقين" data-en="4. The liar sees a different word">٤. الكذاب بيشوف كلمة مختلفة عن الباقين</p>
+                        <p style="margin: 15px 0; font-size: 1.1em;" data-ar="٥. بعدين بيبدأ سؤال بعض أو وصف الكلمات" data-en="5. Then questioning or describing words starts">٥. بعدين بيبدأ سؤال بعض أو وصف الكلمات</p>
+                        <p style="margin: 15px 0; font-size: 1.1em;" data-ar="٦. كل واحد يصوت على اللي يعتقد إنه كذاب" data-en="6. Everyone votes who they think is the liar">٦. كل واحد يصوت على اللي يعتقد إنه كذاب</p>
+                        <p style="margin: 15px 0; font-size: 1.1em;" data-ar="٧. الكذاب يختار الكلمة الصحيحة من ٧ خيارات" data-en="7. The liar chooses the correct word from 7 options">٧. الكذاب يختار الكلمة الصحيحة من ٧ خيارات</p>
+                        <p style="margin: 15px 0; font-size: 1.1em;" data-ar="٨. إذا اختار الكذاب صح، يفوز، وإلا اللاعبين يفوزون" data-en="8. If liar chooses correctly, they win, else players win">٨. إذا اختار الكذاب صح، يفوز، وإلا اللاعبين يفوزون</p>
+                    </div>
+                    
+                    <div style="color: #ff6b6b; margin-top: 30px; padding: 15px; background: rgba(255,107,107,0.1); border-radius: 10px;">
+                        <strong data-ar="⚠️ تنبيه:" data-en="⚠️ Warning:">⚠️ تنبيه:</strong> 
+                        <span data-ar="الكذاب لازم يخفي إنه هو الكذاب ويدور كلمة قريبة من الأصل!" 
+                              data-en="The liar must hide their identity and find a word close to the original!">
+                            الكذاب لازم يخفي إنه هو الكذاب ويدور كلمة قريبة من الأصل!
+                        </span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 50px;">
+                    <button class="btn btn-secondary" onclick="showScreen('menuScreen')">
+                        <span data-ar="فهمت خلاص" data-en="Got it">فهمت خلاص</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Screen -->
+        <div class="screen" id="settingsScreen">
+            <div class="header">
+                <h1 class="game-title" data-ar="الإعدادات" data-en="Settings">الإعدادات</h1>
+            </div>
+            
+            <div class="settings-grid">
+                <div class="setting-group">
+                    <h3 class="setting-title" data-ar="📱 حجم الشاشة" data-en="📱 Screen Size">📱 حجم الشاشة</h3>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span data-ar="صغير" data-en="Small">صغير</span>
+                            <span data-ar="كبير" data-en="Large">كبير</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="screenSize">
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <h3 class="setting-title" data-ar="🔠 حجم النصوص" data-en="🔠 Text Size">🔠 حجم النصوص</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px;">
+                        <button class="btn btn-small" onclick="setTextSize('normal')">
+                            <span data-ar="عادي" data-en="Normal">عادي</span>
+                        </button>
+                        <button class="btn btn-small" onclick="setTextSize('large')">
+                            <span data-ar="كبير" data-en="Large">كبير</span>
+                        </button>
+                        <button class="btn btn-small" onclick="setTextSize('xlarge')">
+                            <span data-ar="كبير جداً" data-en="X-Large">كبير جداً</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <h3 class="setting-title" data-ar="🔄 حجم الأزرار" data-en="🔄 Button Size">🔄 حجم الأزرار</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px;">
+                        <button class="btn btn-small" onclick="setButtonSize('normal')">
+                            <span data-ar="عادي" data-en="Normal">عادي</span>
+                        </button>
+                        <button class="btn btn-small" onclick="setButtonSize('large')">
+                            <span data-ar="كبير" data-en="Large">كبير</span>
+                        </button>
+                        <button class="btn btn-small" onclick="setButtonSize('xlarge')">
+                            <span data-ar="كبير جداً" data-en="X-Large">كبير جداً</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <h3 class="setting-title" data-ar="🎵 الصوت والتأثيرات" data-en="🎵 Sound & Effects">🎵 الصوت والتأثيرات</h3>
+                    <div style="margin-top: 20px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin: 15px 0;">
+                            <span data-ar="صوت اللعبة" data-en="Game Sound">صوت اللعبة</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="soundToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin: 15px 0;">
+                            <span data-ar="الاهتزاز" data-en="Vibration">الاهتزاز</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="vibrationToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <h3 class="setting-title" data-ar="⚡ خيارات متقدمة" data-en="⚡ Advanced Options">⚡ خيارات متقدمة</h3>
+                    <div style="margin-top: 20px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin: 15px 0;">
+                            <span>
+                                <span data-ar="إظهار دور الكذاب له" data-en="Show liar role to them">إظهار دور الكذاب له</span><br>
+                                <small style="color: #ff6b6b;" data-ar="(ما ينصح فيه)" data-en="(Not recommended)">(ما ينصح فيه)</small>
+                            </span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="showRoleToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin: 15px 0;">
+                            <span data-ar="عرض تلميحات للكذاب" data-en="Show hints for liar">عرض تلميحات للكذاب</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="hintsToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 50px;">
+                <button class="btn btn-primary" onclick="saveSettings()">
+                    <span data-ar="💾 حفظ الإعدادات" data-en="💾 Save Settings">💾 حفظ الإعدادات</span>
+                </button>
+                <button class="btn" onclick="showScreen('menuScreen')">
+                    <span data-ar="رجع للقائمة" data-en="Back to Menu">رجع للقائمة</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Player Setup Screen -->
+        <div class="screen" id="playerSetupScreen">
+            <div class="header">
+                <h1 class="game-title" data-ar="سجل اللاعبين" data-en="Player Setup">سجل اللاعبين</h1>
+            </div>
+            
+            <div class="game-screen">
+                <div class="instruction-box">
+                    <h3 style="color: #ffd93d; margin-bottom: 20px;">
+                        <span data-ar="👥 أدخل أسماء اللاعبين" data-en="👥 Enter Player Names">👥 أدخل أسماء اللاعبين</span>
+                    </h3>
+                    <p data-ar="العبة تحتاج ٣ أشخاص على الأقل، وأكثر عدد ١٠ أشخاص" 
+                       data-en="Game needs at least 3 people, maximum 10 people">
+                        العبة تحتاج ٣ أشخاص على الأقل، وأكثر عدد ١٠ أشخاص
+                    </p>
+                </div>
+                
+                <div class="player-inputs" id="playerInputs">
+                    <!-- Player inputs will be added here -->
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <button class="btn btn-secondary" onclick="addPlayerInput()">
+                        <span data-ar="➕ زود لاعب" data-en="➕ Add Player">➕ زود لاعب</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="removePlayerInput()">
+                        <span data-ar="➖ شيل لاعب" data-en="➖ Remove Player">➖ شيل لاعب</span>
+                    </button>
+                </div>
+                
+                <div style="margin-top: 50px;">
+                    <button class="btn btn-primary" onclick="proceedToLiarSelection()" id="continueBtn" disabled>
+                        <span data-ar="التالي" data-en="Next">التالي</span>
+                    </button>
+                    <button class="btn" onclick="showScreen('menuScreen')">
+                        <span data-ar="إلغاء" data-en="Cancel">إلغاء</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liar Selection Screen -->
+        <div class="screen" id="liarSelectionScreen">
+            <div class="header">
+                <h1 class="game-title" data-ar="كم كذاب تبغي؟" data-en="How Many Liars?">كم كذاب تبغي؟</h1>
+            </div>
+            
+            <div class="game-screen">
+                <div class="instruction-box">
+                    <h3 style="color: #ffd93d; margin-bottom: 20px;">
+                        <span data-ar="🎭 اختر عدد الكذابين" data-en="🎭 Choose Number of Liars">🎭 اختر عدد الكذابين</span>
+                    </h3>
+                    <p data-ar="اختر عدد الكذابين اللي تبيهم يجون معاك، كل ما زاد عددهم زادت صعوبة اللعبة" 
+                       data-en="Choose how many liars you want, more liars means harder game">
+                        اختر عدد الكذابين اللي تبيهم يجون معاك، كل ما زاد عددهم زادت صعوبة اللعبة
+                    </p>
+                </div>
+                
+                <div class="mode-selection" id="liarOptions">
+                    <!-- Liar options will be added here -->
+                </div>
+                
+                <div style="margin-top: 50px;">
+                    <button class="btn btn-primary" onclick="proceedToGameMode()" id="proceedToModeBtn" disabled>
+                        <span data-ar="التالي" data-en="Next">التالي</span>
+                    </button>
+                    <button class="btn" onclick="showScreen('playerSetupScreen')">
+                        <span data-ar="رجع" data-en="Back">رجع</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Mode Selection Screen -->
+        <div class="screen" id="gameModeScreen">
+            <div class="header">
+                <h1 class="game-title" data-ar="طريقة اللعب" data-en="Game Mode">طريقة اللعب</h1>
+            </div>
+            
+            <div class="game-screen">
+                <div class="instruction-box">
+                    <h3 style="color: #ffd93d; margin-bottom: 20px;">
+                        <span data-ar="🎯 اختر طريقة اللعب" data-en="🎯 Choose Game Mode">🎯 اختر طريقة اللعب</span>
+                    </h3>
+                    <p data-ar="اختار كيف تبغي اللعبة تمشي بعد ما الكل يشوف كلمته" 
+                       data-en="Choose how the game proceeds after everyone sees their word">
+                        اختار كيف تبغي اللعبة تمشي بعد ما الكل يشوف كلمته
+                    </p>
+                </div>
+                
+                <div class="mode-selection">
+                    <div class="mode-card" onclick="selectGameMode('questions')">
+                        <div class="mode-icon">❓</div>
+                        <h4 class="mode-title" data-ar="أسئلة فقط" data-en="Questions Only">أسئلة فقط</h4>
+                        <p data-ar="كل واحد يسأل الثاني أسئلة ويحاول يكتشف الكذاب من الإجابات" 
+                           data-en="Everyone asks questions and tries to discover the liar from answers">
+                            كل واحد يسأل الثاني أسئلة ويحاول يكتشف الكذاب من الإجابات
+                        </p>
+                    </div>
+                    
+                    <div class="mode-card" onclick="selectGameMode('descriptions')">
+                        <div class="mode-icon">💬</div>
+                        <h4 class="mode-title" data-ar="وصف الكلمات" data-en="Word Descriptions">وصف الكلمات</h4>
+                        <p data-ar="كل واحد يوصف كلمته بدون ما يقولها بالضبط، والكذاب يحاول يندمج" 
+                           data-en="Everyone describes their word without saying it exactly, liar tries to blend in">
+                            كل واحد يوصف كلمته بدون ما يقولها بالضبط، والكذاب يحاول يندمج
+                        </p>
+                    </div>
+                    
+                    <div class="mode-card" onclick="selectGameMode('both')">
+                        <div class="mode-icon">🔄</div>
+                        <h4 class="mode-title" data-ar="الطريقتين مع بعض" data-en="Both Methods">الطريقتين مع بعض</h4>
+                        <p data-ar="وصف الكلمات أول، بعدين أسئلة، أصعب وأحلى!" 
+                           data-en="Word descriptions first, then questions, harder and more fun!">
+                            وصف الكلمات أول، بعدين أسئلة، أصعب وأحلى!
+                        </p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 50px;">
+                    <button class="btn btn-primary" onclick="startGameSession()" id="startGameBtn" disabled>
+                        <span data-ar="استمر" data-en="Continue">استمر</span>
+                    </button>
+                    <button class="btn" onclick="showScreen('liarSelectionScreen')">
+                        <span data-ar="رجع" data-en="Back">رجع</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Instruction Screen -->
+        <div class="screen" id="gameInstructionScreen">
+            <div class="header">
+                <h1 class="game-title" data-ar="جاهزين نلعب؟" data-en="Ready to Play?">جاهزين نلعب؟</h1>
+            </div>
+            
+            <div class="game-screen">
+                <div class="instruction-box">
+                    <h3 style="color: #ffd93d; margin-bottom: 20px;">
+                        <span data-ar="📱 طريقة التمرير" data-en="📱 How to Play">📱 طريقة التمرير</span>
+                    </h3>
+                    <p data-ar="اللعبة راح تمرر الجوال بينكم واحد ورا الثاني" 
+                       data-en="The phone will pass between you one by one">
+                        اللعبة راح تمرر الجوال بينكم واحد ورا الثاني
+                    </p>
+                    <p data-ar="كل واحد لما يجيه الجوال يضغط على (التالي) عشان يشوف كلمته" 
+                       data-en="When you get the phone, press (Next) to see your word">
+                        كل واحد لما يجيه الجوال يضغط على (التالي) عشان يشوف كلمته
+                    </p>
+                    <p data-ar="الكذاب راح يشوف كلمة مختلفة عن الباقين" 
+                       data-en="The liar will see a different word">
+                        الكذاب راح يشوف كلمة مختلفة عن الباقين
+                    </p>
+                    <p data-ar="الهدف: اللاعبين العاديين يكتشفون الكذاب، والكذاب يخفي نفسه" 
+                       data-en="Goal: Normal players discover the liar, liar hides themselves">
+                        الهدف: اللاعبين العاديين يكتشفون الكذاب، والكذاب يخفي نفسه
+                    </p>
+                    
+                    <div class="warning" style="margin-top: 20px;">
+                        ⚠️ <strong data-ar="تنبيه:" data-en="Warning:">تنبيه:</strong> 
+                        <span data-ar="لا تظهر كلمتك لأحد! سري بينك وبين الجوال" 
+                              data-en="Don't show your word to anyone! Secret between you and the phone">
+                            لا تظهر كلمتك لأحد! سري بينك وبين الجوال
+                        </span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 50px;">
+                    <button class="btn btn-primary btn-large" onclick="startWordPhase()">
+                        <span data-ar="ابدأ الدور الأول" data-en="Start First Round">ابدأ الدور الأول</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Word Phase Screen -->
+        <div class="screen" id="wordPhaseScreen">
+            <div class="header">
+                <h1 class="game-title" data-ar="دور اللاعبين" data-en="Player Turn">دور اللاعبين</h1>
+            </div>
+            
+            <div class="game-screen">
+                <div class="instruction-box" id="currentPlayerInstruction">
+                    <!-- Instructions will be updated here -->
+                </div>
+                
+                <div class="word-display" id="wordDisplay">
+                    <!-- Word will be displayed here -->
+                </div>
+                
+                <div id="liarHintSection" style="display: none;">
+                    <div class="liar-hint" id="liarHint">
+                        <!-- Liar hint will be shown here -->
+                    </div>
+                </div>
+                
+                <div id="roleRevealSection" style="display: none; margin: 30px 0;">
+                    <div style="background: rgba(255,107,107,0.2); padding: 20px; border-radius: 15px; border: 2px solid #ff6b6b;">
+                        <h3 style="color: #ff6b6b; margin-bottom: 10px;">
+                            <span data-ar="🎭 أنت الكذاب!" data-en="🎭 You are the Liar!">🎭 أنت الكذاب!</span>
+                        </h3>
+                        <p data-ar="كلمتك مختلفة عن الباقين، حاول تندمج معهم" 
+                           data-en="Your word is different, try to blend in">
+                            كلمتك مختلفة عن الباقين، حاول تندمج معهم
+                        </p>
+                        <p><strong data-ar="تلميح:" data-en="Hint:">تلميح:</strong> <span id="correctWordHint"></span></p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 50px;">
+                    <button class="btn btn-primary btn-large" onclick="nextPlayer()">
+                        <span data-ar="التالي" data-en="Next">التالي</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Phase Screen -->
+        <div class="screen" id="questionPhaseScreen">
+            <div class="header">
+                <h1 class="game-title" data-ar="مرحلة الأسئلة" data-en="Question Phase">مرحلة الأسئلة</h1>
+            </div>
+            
+            <div class="game-screen">
+                <div class="instruction-box" id="questionInstruction">
+                    <!-- Question instructions will be updated here -->
+                </div>
+                
+                <div id="descriptionPhase" style="display: none; margin: 40px 0;">
+                    <div style="background: rgba(78,205,196,0.2); padding: 30px; border-radius: 20px; border: 2px solid #4ecdc4;">
+                        <h3 style="color: #4ecdc4; margin-bottom: 20px;">
+                            <span data-ar="💬 وصف الكلمات" data-en="💬 Word Descriptions">💬 وصف الكلمات</span>
+                        </h3>
+                        <p style="font-size: 1.3em; margin-bottom: 20px;">
+                            <span data-ar="كل واحد يوصف كلمته بدون ما يسميها بالضبط" 
+                                  data-en="Everyone describes their word without naming it exactly">
+                                كل واحد يوصف كلمته بدون ما يسميها بالضبط
+                            </span>
+                        </p>
+                        <p style="color: #ffd93d;">
+                            <span data-ar="مثال: إذا كانت الكلمة 'تفاحة' تقدر تقول 'فاكهة حمراء، فيها بذور، تغذي الجسم'" 
+                                  data-en="Example: If the word is 'apple' you can say 'red fruit, has seeds, nourishes the body'">
+                                مثال: إذا كانت الكلمة "تفاحة" تقدر تقول "فاكهة حمراء، فيها بذور، تغذي الجسم"
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 50px;">
+                    <button class="btn btn-primary" onclick="nextQuestion()" id="nextQuestionBtn">
+                        <span data-ar="التالي" data-en="Next">التالي</span>
+                    </button>
+                    <button class="btn" onclick="skipToVoting()" id="skipToVotingBtn" style="display: none;">
+                        <span data-ar="التصويت" data-en="Voting">التصويت</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voting Phase Screen -->
+        <div class="screen" id="votingPhaseScreen">
+            <div class="header">
+                <h1 class="game-title" data-ar="مرحلة التصويت" data-en="Voting Phase">مرحلة التصويت</h1>
+            </div>
+            
+            <div class="game-screen">
+                <div class="instruction-box">
+                    <h3 style="color: #ffd93d; margin-bottom: 20px;" id="votingInstruction">
+                        <!-- Voting instruction will be updated here -->
+                    </h3>
+                    <p data-ar="صوت على الشخص اللي تعتقد إنه الكذاب" 
+                       data-en="Vote for the person you think is the liar">
+                        صوت على الشخص اللي تعتقد إنه الكذاب
+                    </p>
+                    <p data-ar="ما تقدر تغير صوتك بعد ما تضغط" 
+                       data-en="You can't change your vote after clicking">
+                        ما تقدر تغير صوتك بعد ما تضغط
+                    </p>
+                </div>
+                
+                <div class="voting-options" id="votingOptions">
+                    <!-- Voting buttons will be added here -->
+                </div>
+                
+                <div style="margin-top: 50px;">
+                    <button class="btn btn-primary" onclick="submitVote()" id="submitVoteBtn" disabled>
+                        <span data-ar="أكد التصويت" data-en="Confirm Vote">أكد التصويت</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liar Word Choice Screen -->
+        <div class="screen" id="liarChoiceScreen">
+            <div class="header">
+                <h1 class="game-title" data-ar="اختر الكلمة الصحيحة" data-en="Choose the Correct Word">اختر الكلمة الصحيحة</h1>
+            </div>
+            
+            <div class="game-screen">
+                <div class="instruction-box">
+                    <h3 style="color: #ff6b6b; margin-bottom: 20px;" id="liarChoiceInstruction">
+                        <!-- Liar choice instruction will be updated here -->
+                    </h3>
+                    <p data-ar="الكذاب، شوف ٧ كلمات واختار الكلمة اللي كانت المفروض تقولها" 
+                       data-en="Liar, look at 7 words and choose the one you should have said">
+                        الكذاب، شوف ٧ كلمات واختار الكلمة اللي كانت المفروض تقولها
+                    </p>
+                    <p style="color: #ffd93d; margin-top: 10px;" data-ar="إذا اختارت صح، تفوز، وإذا أخطأت، اللاعبين يفوزون" 
+                       data-en="If you choose correctly, you win, if wrong, players win">
+                        إذا اختارت صح، تفوز، وإذا أخطأت، اللاعبين يفوزون
+                    </p>
+                </div>
+                
+                <div class="word-choices" id="wordChoices">
+                    <!-- Word choice buttons will be added here -->
+                </div>
+                
+                <div style="margin-top: 50px;">
+                    <button class="btn btn-primary" onclick="submitLiarChoice()" id="submitLiarChoiceBtn" disabled>
+                        <span data-ar="أكد الاختيار" data-en="Confirm Choice">أكد الاختيار</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="screen" id="resultsScreen">
+            <div class="header">
+                <h1 class="game-title" data-ar="النتيجة" data-en="Results">النتيجة</h1>
+            </div>
+            
+            <div class="game-screen">
+                <div class="results-box" id="resultsBox">
+                    <!-- Results will be displayed here -->
+                </div>
+                
+                <div class="players-reveal" id="playersReveal">
+                    <!-- Player cards will be added here -->
+                </div>
+                
+                <div style="margin-top: 50px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="playAgain()">
+                        <span data-ar="🔄 العب تاني" data-en="🔄 Play Again">🔄 العب تاني</span>
+                    </button>
+                    <button class="btn" onclick="showScreen('menuScreen')">
+                        <span data-ar="🏠 القائمة الرئيسية" data-en="🏠 Main Menu">🏠 القائمة الرئيسية</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        const gameState = {
+            players: [],
+            liars: [],
+            currentPlayerIndex: 0,
+            currentPhase: 'word',
+            gameMode: 'questions',
+            numberOfLiars: 1,
+            correctWord: '',
+            liarWord: '',
+            votes: {},
+            currentQuestionIndex: 0,
+            questions: [],
+            currentVoterIndex: 0,
+            language: 'ar',
+            settings: {
+                textSize: 'normal',
+                buttonSize: 'normal',
+                sound: true,
+                vibration: true,
+                showRole: false,
+                hints: true
+            },
+            liarChoiceMade: false,
+            liarCorrectChoice: false
+        };
+
+        // Enhanced Word Database (300+ words)
+        const wordsDatabase = {
+            ar: [
+                "تفاحة", "كمبيوتر", "سيارة", "كتاب", "قلم", "بحر", "جبل", "شمس", "قمر", "نجمة",
+                "ساعة", "باب", "نافذة", "كرسي", "طاولة", "سرير", "وسادة", "بطانية", "سجادة", "مصباح",
+                "تلفون", "تلفزيون", "راديو", "ثلاجة", "فرن", "ميكروويف", "غسالة", "مجفف", "مكنسة", "مكنسة كهربائية",
+                "ملعقة", "شوكة", "سكين", "صحن", "كوب", "ابريق", "قدر", "مقلاة", "خلاط", "عصارة",
+                "قهوة", "شاي", "حليب", "عصير", "ماء", "خبز", "جبن", "زبدة", "عسل", "مربى",
+                "لحم", "دجاج", "سمك", "أرز", "معكرونة", "بطاطس", "بصل", "ثوم", "طماطم", "خيار",
+                "تفاح", "موز", "برتقال", "فراولة", "عنب", "بطيخ", "شمام", "مانجو", "أناناس", "كيوي",
+                "قطة", "كلب", "أسد", "نمر", "فيل", "زرافة", "قرد", "دب", "ذئب", "ثعلب",
+                "طائر", "عصفور", "نسر", "بطة", "دجاجة", "ديك", "نحلة", "فراشة", "ذبابة", "بعوضة",
+                "شجرة", "وردة", "عشب", "صبار", "نخلة", "تفاح", "برتقال", "ليمون", "زيتون", "تين",
+                "مدرسة", "جامعة", "مستشفى", "مطار", "محطة", "فندق", "مطعم", "مقهى", "سوبرماركت", "صيدلية",
+                "كرة", "مضرب", "شبكة", "هدف", "ملعب", "حذاء", "قميص", "بنطال", "جاكيت", "قبعة",
+                "نظارة", "ساعة يد", "خاتم", "سلسلة", "قرط", "سوار", "حقيبة", "محفظة", "حزام", "وشاح",
+                "دراجة", "سكوتر", "قطار", "طائرة", "سفينة", "غواصة", "صاروخ", "مكوك", "سيارة أجرة", "باص",
+                "نار", "ماء", "هواء", "تراب", "ذهب", "فضة", "حديد", "نحاس", "ألماس", "لؤلؤ",
+                "سحاب", "مطر", "ثلج", "برد", "حر", "ريح", "عاصفة", "زلزال", "بركان", "فيضان",
+                "مدينة", "قرية", "حي", "شارع", "جسر", "نفق", "سور", "قلعة", "قصر", "كوخ",
+                "مكتب", "معمل", "مصنع", "مزرعة", "حديقة", "ملاهي", "سيرك", "مسرح", "سينما", "متحف",
+                "كتاب", "مجلة", "جريدة", "قصة", "رواية", "شعر", "مقال", "تقرير", "رسالة", "بريد",
+                "إنترنت", "موقع", "تطبيق", "لعبة", "فيديو", "صورة", "موسيقى", "أغنية", "فيلم", "مسلسل",
+                "يد", "رجل", "رأس", "عين", "أنف", "فم", "أذن", "شعر", "أسنان", "لسان",
+                "قلب", "رئة", "كبد", "كلى", "معدة", "دم", "عظم", "جلد", "عضلة", "عصب",
+                "طبيب", "مهندس", "معلم", "طيار", "شرطي", "جندي", "نجار", "حداد", "بناء", "سائق",
+                "فنان", "موسيقي", "ممثل", "كاتب", "شاعر", "رسام", "مصور", "مذيع", "محرر", "مترجم",
+                "رياضي", "لاعب", "مدرب", "حكم", "متفرج", "جمهور", "بطولة", "كأس", "ميدالية", "رقم قياسي",
+                "سفر", "سياحة", "رحلة", "إجازة", "فندق", "شاطئ", "جبل", "صحراء", "غابة", "حديقة حيوان",
+                "حفلة", "عرس", "مناسبة", "عيد", "هدية", "كعكة", "شموع", "بالون", "زينة", "موسيقى",
+                "صلاة", "مسجد", "كنيسة", "معبد", "قرآن", "إنجيل", "توراة", "صوم", "زكاة", "حج",
+                "حب", "صداقة", "عائلة", "أم", "أب", "أخ", "أخت", "جد", "جدة", "ابن", "ابنة",
+                "فرح", "حزن", "غضب", "خوف", "دهشة", "ملل", "تعب", "نشاط", "جوع", "عطش",
+                "نجاح", "فشل", "تحدي", "مغامرة", "خطر", "أمان", "حرية", "عدالة", "سلام", "حرب",
+                "علم", "معرفة", "تفكير", "ذاكرة", "خيال", "إبداع", "ابتكار", "اكتشاف", "اختراع", "بحث",
+                "مستقبل", "ماضي", "حاضر", "زمن", "تاريخ", "ذكرى", "تراث", "ثقافة", "حضارة", "تقدم",
+                "طاقة", "كهرباء", "نور", "ظلام", "ضوء", "لون", "صوت", "صمت", "رائحة", "طعم",
+                "سرعة", "بطء", "ثقل", "خفة", "طول", "قصر", "عرض", "ضيق", "ارتفاع", "انخفاض",
+                "بداية", "نهاية", "منتصف", "جانب", "داخل", "خارج", "أعلى", "أسفل", "يمين", "يسار",
+                "دائرة", "مربع", "مثلث", "مستطيل", "بيضاوي", "خط", "زاوية", "نقطة", "سطح", "حجم"
+            ],
+            en: [
+                "apple", "computer", "car", "book", "pen", "sea", "mountain", "sun", "moon", "star",
+                "clock", "door", "window", "chair", "table", "bed", "pillow", "blanket", "carpet", "lamp",
+                "phone", "television", "radio", "refrigerator", "oven", "microwave", "washing machine", "dryer", "broom", "vacuum cleaner",
+                "spoon", "fork", "knife", "plate", "cup", "pot", "pan", "blender", "juicer", "toaster",
+                "coffee", "tea", "milk", "juice", "water", "bread", "cheese", "butter", "honey", "jam",
+                "meat", "chicken", "fish", "rice", "pasta", "potato", "onion", "garlic", "tomato", "cucumber",
+                "apple", "banana", "orange", "strawberry", "grape", "watermelon", "melon", "mango", "pineapple", "kiwi",
+                "cat", "dog", "lion", "tiger", "elephant", "giraffe", "monkey", "bear", "wolf", "fox",
+                "bird", "sparrow", "eagle", "duck", "chicken", "rooster", "bee", "butterfly", "fly", "mosquito",
+                "tree", "flower", "grass", "cactus", "palm tree", "apple tree", "orange tree", "lemon tree", "olive tree", "fig tree",
+                "school", "university", "hospital", "airport", "station", "hotel", "restaurant", "cafe", "supermarket", "pharmacy",
+                "ball", "racket", "net", "goal", "stadium", "shoe", "shirt", "pants", "jacket", "hat",
+                "glasses", "watch", "ring", "necklace", "earring", "bracelet", "bag", "wallet", "belt", "scarf",
+                "bicycle", "scooter", "train", "airplane", "ship", "submarine", "rocket", "shuttle", "taxi", "bus",
+                "fire", "water", "air", "earth", "gold", "silver", "iron", "copper", "diamond", "pearl",
+                "cloud", "rain", "snow", "cold", "hot", "wind", "storm", "earthquake", "volcano", "flood",
+                "city", "village", "neighborhood", "street", "bridge", "tunnel", "wall", "castle", "palace", "hut",
+                "office", "laboratory", "factory", "farm", "garden", "amusement park", "circus", "theater", "cinema", "museum",
+                "book", "magazine", "newspaper", "story", "novel", "poetry", "article", "report", "letter", "mail",
+                "internet", "website", "application", "game", "video", "picture", "music", "song", "movie", "series",
+                "hand", "foot", "head", "eye", "nose", "mouth", "ear", "hair", "teeth", "tongue",
+                "heart", "lung", "liver", "kidney", "stomach", "blood", "bone", "skin", "muscle", "nerve",
+                "doctor", "engineer", "teacher", "pilot", "police officer", "soldier", "carpenter", "blacksmith", "builder", "driver",
+                "artist", "musician", "actor", "writer", "poet", "painter", "photographer", "announcer", "editor", "translator",
+                "athlete", "player", "coach", "referee", "spectator", "audience", "championship", "cup", "medal", "record",
+                "travel", "tourism", "trip", "vacation", "hotel", "beach", "mountain", "desert", "forest", "zoo",
+                "party", "wedding", "occasion", "holiday", "gift", "cake", "candles", "balloon", "decoration", "music",
+                "prayer", "mosque", "church", "temple", "Quran", "Bible", "Torah", "fasting", "charity", "pilgrimage",
+                "love", "friendship", "family", "mother", "father", "brother", "sister", "grandfather", "grandmother", "son", "daughter",
+                "joy", "sadness", "anger", "fear", "surprise", "boredom", "tiredness", "activity", "hunger", "thirst",
+                "success", "failure", "challenge", "adventure", "danger", "safety", "freedom", "justice", "peace", "war",
+                "science", "knowledge", "thinking", "memory", "imagination", "creativity", "innovation", "discovery", "invention", "research",
+                "future", "past", "present", "time", "history", "memory", "heritage", "culture", "civilization", "progress",
+                "energy", "electricity", "light", "darkness", "color", "sound", "silence", "smell", "taste",
+                "speed", "slowness", "heaviness", "lightness", "length", "shortness", "width", "narrowness", "height", "lowness",
+                "beginning", "end", "middle", "side", "inside", "outside", "top", "bottom", "right", "left",
+                "circle", "square", "triangle", "rectangle", "oval", "line", "angle", "point", "surface", "volume"
+            ]
+        };
+
+        // Word opposites for liars
+        const wordOpposites = {
+            ar: {
+                "تفاحة": "برتقال", "كمبيوتر": "دفتر", "سيارة": "دراجة", "كتاب": "مجلة", 
+                "قلم": "فرشاة", "بحر": "صحراء", "جبل": "وادي", "شمس": "قمر", 
+                "ساعة": "تقويم", "باب": "نافذة", "كرسي": "مقعد", "طاولة": "رف",
+                "سرير": "أريكة", "وسادة": "بطانية", "ثلاجة": "فرن", "ملعقة": "شوكة",
+                "قهوة": "شاي", "خبز": "كعك", "لحم": "خضار", "دجاج": "سمك",
+                "قطة": "كلب", "أسد": "نمر", "طائر": "سمكة", "شجرة": "زهرة",
+                "مدرسة": "بيت", "مستشفى": "صيدلية", "كرة": "مكعب", "قميص": "بنطال",
+                "نظارة": "عدسة", "دراجة": "سيارة", "نار": "ماء", "ذهب": "فضة",
+                "سحاب": "شمس", "مدينة": "قرية", "مكتب": "منزل", "كتاب": "فيلم",
+                "إنترنت": "كتاب", "يد": "رجل", "قلب": "دماغ", "طبيب": "مهندس",
+                "فنان": "عالم", "رياضي": "فنان", "سفر": "إقامة", "حفلة": "جنازة",
+                "صلاة": "نوم", "حب": "كراهية", "فرح": "حزن", "نجاح": "فشل",
+                "علم": "جهل", "مستقبل": "ماضي", "طاقة": "كسل", "سرعة": "بطء",
+                "بداية": "نهاية", "دائرة": "مربع"
+            },
+            en: {
+                "apple": "orange", "computer": "notebook", "car": "bicycle", "book": "magazine",
+                "pen": "brush", "sea": "desert", "mountain": "valley", "sun": "moon",
+                "clock": "calendar", "door": "window", "chair": "stool", "table": "shelf",
+                "bed": "sofa", "pillow": "blanket", "refrigerator": "oven", "spoon": "fork",
+                "coffee": "tea", "bread": "cake", "meat": "vegetable", "chicken": "fish",
+                "cat": "dog", "lion": "tiger", "bird": "fish", "tree": "flower",
+                "school": "house", "hospital": "pharmacy", "ball": "cube", "shirt": "pants",
+                "glasses": "lens", "bicycle": "car", "fire": "water", "gold": "silver",
+                "cloud": "sun", "city": "village", "office": "home", "book": "movie",
+                "internet": "book", "hand": "foot", "heart": "brain", "doctor": "engineer",
+                "artist": "scientist", "athlete": "artist", "travel": "stay", "party": "funeral",
+                "prayer": "sleep", "love": "hate", "joy": "sadness", "success": "failure",
+                "science": "ignorance", "future": "past", "energy": "laziness", "speed": "slowness",
+                "beginning": "end", "circle": "square"
+            }
+        };
+
+        // Initialize the game
+        function initGame() {
+            loadSettings();
+            updateUIForLanguage();
+            initializePlayerInputs();
+        }
+
+        // Language toggle - FIXED
+        function toggleLanguage() {
+            const langBtn = document.querySelector('.lang-btn');
+            if (gameState.language === 'ar') {
+                gameState.language = 'en';
+                document.body.classList.remove('arabic');
+                document.body.classList.add('english');
+                document.body.dir = 'ltr';
+                langBtn.textContent = 'العربية';
+            } else {
+                gameState.language = 'ar';
+                document.body.classList.remove('english');
+                document.body.classList.add('arabic');
+                document.body.dir = 'rtl';
+                langBtn.textContent = 'English';
+            }
+            updateUIForLanguage();
+        }
+
+        function updateUIForLanguage() {
+            // Update all text elements based on language
+            const elements = document.querySelectorAll('[data-ar], [data-en]');
+            elements.forEach(element => {
+                if (gameState.language === 'ar' && element.dataset.ar) {
+                    element.textContent = element.dataset.ar;
+                } else if (gameState.language === 'en' && element.dataset.en) {
+                    element.textContent = element.dataset.en;
+                }
+            });
+        }
+
+        // Screen navigation
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+            
+            // Initialize specific screens
+            if (screenId === 'playerSetupScreen') {
+                initializePlayerInputs();
+            } else if (screenId === 'liarSelectionScreen') {
+                setupLiarOptions();
+            }
+        }
+
+        // Player setup
+        function initializePlayerInputs() {
+            const container = document.getElementById('playerInputs');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 3; i++) {
+                addPlayerInput();
+            }
+        }
+
+        function addPlayerInput() {
+            const container = document.getElementById('playerInputs');
+            const playerCount = container.children.length;
+            
+            if (playerCount >= 10) return;
+            
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'input-group';
+            inputGroup.innerHTML = `
+                <label class="input-label">${gameState.language === 'ar' ? 'اللاعب ' : 'Player '}${playerCount + 1}</label>
+                <input type="text" class="form-input player-name" 
+                       placeholder="${gameState.language === 'ar' ? 'اكتب اسم اللاعب' : 'Enter player name'}" 
+                       oninput="checkPlayerCount()">
+            `;
+            container.appendChild(inputGroup);
+            checkPlayerCount();
+        }
+
+        function removePlayerInput() {
+            const container = document.getElementById('playerInputs');
+            if (container.children.length > 3) {
+                container.removeChild(container.lastChild);
+                checkPlayerCount();
+            }
+        }
+
+        function checkPlayerCount() {
+            const inputs = document.querySelectorAll('.player-name');
+            let validCount = 0;
+            
+            inputs.forEach(input => {
+                if (input.value.trim().length >= 2) {
+                    validCount++;
+                }
+            });
+            
+            const continueBtn = document.getElementById('continueBtn');
+            continueBtn.disabled = validCount < 3;
+        }
+
+        function proceedToLiarSelection() {
+            const inputs = document.querySelectorAll('.player-name');
+            gameState.players = [];
+            
+            inputs.forEach(input => {
+                const name = input.value.trim();
+                if (name.length >= 2) {
+                    gameState.players.push({
+                        name: name,
+                        isLiar: false,
+                        hasVoted: false,
+                        votesReceived: 0
+                    });
+                }
+            });
+            
+            showScreen('liarSelectionScreen');
+        }
+
+        // Liar selection
+        function setupLiarOptions() {
+            const container = document.getElementById('liarOptions');
+            container.innerHTML = '';
+            
+            const playerCount = gameState.players.length;
+            const options = [];
+            
+            if (playerCount >= 3) options.push(1);
+            if (playerCount >= 5) options.push(2);
+            if (playerCount >= 6) options.push(3);
+            
+            options.forEach(liarCount => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'mode-card';
+                optionDiv.onclick = () => selectLiarCount(liarCount);
+                
+                let description = '';
+                if (gameState.language === 'ar') {
+                    const descriptions = {
+                        1: `سهل - ${playerCount} لاعبين ضد كذاب واحد`,
+                        2: `متوسط - ${playerCount} لاعبين ضد كذابين`,
+                        3: `صعب - ${playerCount} لاعبين ضد ٣ كذابين`
+                    };
+                    description = descriptions[liarCount] || '';
+                } else {
+                    const descriptions = {
+                        1: `Easy - ${playerCount} players vs 1 liar`,
+                        2: `Medium - ${playerCount} players vs 2 liars`,
+                        3: `Hard - ${playerCount} players vs 3 liars`
+                    };
+                    description = descriptions[liarCount] || '';
+                }
+                
+                optionDiv.innerHTML = `
+                    <div class="mode-icon">${'🎭'.repeat(liarCount)}</div>
+                    <h4 class="mode-title">${liarCount} ${gameState.language === 'ar' ? 'كذاب' : 'Liar'}</h4>
+                    <p>${description}</p>
+                `;
+                container.appendChild(optionDiv);
+            });
+        }
+
+        function selectLiarCount(count) {
+            gameState.numberOfLiars = count;
+            
+            // Remove selection from all cards
+            document.querySelectorAll('#liarOptions .mode-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selection to clicked card
+            event.currentTarget.classList.add('selected');
+            
+            // Enable proceed button
+            document.getElementById('proceedToModeBtn').disabled = false;
+        }
+
+        function proceedToGameMode() {
+            showScreen('gameModeScreen');
+        }
+
+        // Game mode selection
+        function selectGameMode(mode) {
+            gameState.gameMode = mode;
+            
+            // Remove selection from all cards
+            document.querySelectorAll('#gameModeScreen .mode-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selection to clicked card
+            event.currentTarget.classList.add('selected');
+            
+            // Enable start button
+            document.getElementById('startGameBtn').disabled = false;
+        }
+
+        function startGameSession() {
+            // Select liars randomly
+            selectLiars();
+            
+            // Select words
+            selectWords();
+            
+            // Prepare question order
+            prepareQuestions();
+            
+            showScreen('gameInstructionScreen');
+        }
+
+        function selectLiars() {
+            gameState.liars = [];
+            const players = [...gameState.players];
+            
+            // Reset all players to non-liars
+            players.forEach(player => player.isLiar = false);
+            
+            // Select random liars
+            for (let i = 0; i < gameState.numberOfLiars; i++) {
+                const randomIndex = Math.floor(Math.random() * players.length);
+                const liar = players[randomIndex];
+                liar.isLiar = true;
+                gameState.liars.push(liar);
+                players.splice(randomIndex, 1);
+            }
+        }
+
+        function selectWords() {
+            const words = wordsDatabase[gameState.language];
+            const randomIndex = Math.floor(Math.random() * words.length);
+            gameState.correctWord = words[randomIndex];
+            
+            // Select opposite word for liar
+            const opposites = wordOpposites[gameState.language];
+            gameState.liarWord = opposites[gameState.correctWord] || words[(randomIndex + 1) % words.length];
+        }
+
+        function prepareQuestions() {
+            gameState.questions = [];
+            const players = [...gameState.players];
+            
+            // Create 2 rounds of questions
+            for (let round = 0; round < 2; round++) {
+                // Shuffle players
+                players.sort(() => Math.random() - 0.5);
+                
+                for (let i = 0; i < players.length; i++) {
+                    const asker = players[i];
+                    const target = players[(i + 1) % players.length];
+                    
+                    gameState.questions.push({
+                        asker: asker.name,
+                        target: target.name,
+                        round: round + 1
+                    });
+                }
+            }
+        }
+
+        function startWordPhase() {
+            gameState.currentPlayerIndex = 0;
+            showNextPlayerWord();
+        }
+
+        function showNextPlayerWord() {
+            const player = gameState.players[gameState.currentPlayerIndex];
+            const instructionBox = document.getElementById('currentPlayerInstruction');
+            const wordDisplay = document.getElementById('wordDisplay');
+            const liarHintSection = document.getElementById('liarHintSection');
+            const roleRevealSection = document.getElementById('roleRevealSection');
+            const correctWordHint = document.getElementById('correctWordHint');
+            
+            // Show instruction
+            instructionBox.innerHTML = `
+                <h3 style="color: #ffd93d; margin-bottom: 20px;">
+                    ${gameState.language === 'ar' ? '📱 أعط الجوال لـ ' : '📱 Give phone to '}${player.name}
+                </h3>
+                <p>${player.name}، ${gameState.language === 'ar' ? 'اضغط على (التالي) عشان تشوف كلمتك' : 'press (Next) to see your word'}</p>
+                <p style="color: #4ecdc4; margin-top: 10px;">
+                    ${gameState.language === 'ar' ? 'لا تظهر الكلمة لأحد، سر بينك وبين الجوال' : "Don't show the word to anyone, secret between you and the phone"}
+                </p>
+            `;
+            
+            // Clear word display initially
+            wordDisplay.textContent = '؟؟؟';
+            wordDisplay.style.opacity = '0';
+            
+            // Hide liar sections
+            liarHintSection.style.display = 'none';
+            roleRevealSection.style.display = 'none';
+            
+            // Show the screen
+            showScreen('wordPhaseScreen');
+            
+            // Animate word display
+            setTimeout(() => {
+                if (player.isLiar) {
+                    wordDisplay.textContent = gameState.liarWord;
+                    wordDisplay.style.color = '#ff6b6b';
+                    
+                    // Show liar hint if enabled
+                    if (gameState.settings.hints) {
+                        liarHintSection.style.display = 'block';
+                        document.getElementById('liarHint').textContent = 
+                            gameState.language === 'ar' 
+                            ? 'كلمتك مختلفة عن الباقين، حاول تختار كلمة قريبة منهم'
+                            : 'Your word is different, try to choose a word close to theirs';
+                    }
+                    
+                    // Show role if enabled
+                    if (gameState.settings.showRole) {
+                        roleRevealSection.style.display = 'block';
+                        correctWordHint.textContent = gameState.correctWord;
+                    }
+                } else {
+                    wordDisplay.textContent = gameState.correctWord;
+                    wordDisplay.style.color = '#6bcf7f';
+                }
+                
+                wordDisplay.style.opacity = '1';
+                wordDisplay.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    wordDisplay.style.transform = 'scale(1)';
+                }, 300);
+            }, 1000);
+        }
+
+        function nextPlayer() {
+            gameState.currentPlayerIndex++;
+            
+            if (gameState.currentPlayerIndex < gameState.players.length) {
+                showNextPlayerWord();
+            } else {
+                startQuestionPhase();
+            }
+        }
+
+        function startQuestionPhase() {
+            gameState.currentQuestionIndex = 0;
+            showScreen('questionPhaseScreen');
+            showNextQuestion();
+        }
+
+        function showNextQuestion() {
+            if (gameState.currentQuestionIndex >= gameState.questions.length) {
+                startVotingPhase();
+                return;
+            }
+            
+            const question = gameState.questions[gameState.currentQuestionIndex];
+            const instructionBox = document.getElementById('questionInstruction');
+            const descriptionPhase = document.getElementById('descriptionPhase');
+            const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+            const skipToVotingBtn = document.getElementById('skipToVotingBtn');
+            
+            // Show description phase for first round
+            if (question.round === 1 && gameState.gameMode !== 'questions') {
+                descriptionPhase.style.display = 'block';
+                instructionBox.innerHTML = `
+                    <h3 style="color: #ffd93d; margin-bottom: 20px;">
+                        ${gameState.language === 'ar' ? '💬 دور الوصف' : '💬 Description Round'}
+                    </h3>
+                    <p>${gameState.language === 'ar' ? 'الآن كل واحد بيوصف كلمته بدون ما يسميها' : 'Now everyone describes their word without naming it'}</p>
+                    <p style="color: #4ecdc4; margin-top: 10px;">
+                        ${question.asker}، ${gameState.language === 'ar' ? 'دورك توصف كلمتك للجماعة' : 'your turn to describe your word'}
+                    </p>
+                `;
+            } else {
+                descriptionPhase.style.display = 'none';
+                instructionBox.innerHTML = `
+                    <h3 style="color: #ffd93d; margin-bottom: 20px;">
+                        ${gameState.language === 'ar' ? '❓ دور الأسئلة' : '❓ Question Round'}
+                    </h3>
+                    <p>${question.asker}، ${gameState.language === 'ar' ? `اسأل ${question.target} سؤال عن الكلمة` : `ask ${question.target} a question about the word`}</p>
+                    <p style="color: #4ecdc4; margin-top: 10px;">
+                        ${gameState.language === 'ar' ? 'مثال: "هل كلمتك لها علاقة بالأكل؟" أو "هل هي شيء نستخدمه يومياً؟"' : 'Example: "Is your word related to food?" or "Is it something we use daily?"'}
+                    </p>
+                `;
+            }
+            
+            // Update buttons based on game mode
+            if (gameState.gameMode === 'both' && question.round === 1) {
+                nextQuestionBtn.textContent = gameState.language === 'ar' ? 'اللـي بعده' : 'Next Player';
+                skipToVotingBtn.style.display = 'none';
+            } else if (gameState.gameMode === 'descriptions') {
+                nextQuestionBtn.textContent = gameState.language === 'ar' ? 'وصف جديد' : 'New Description';
+                skipToVotingBtn.style.display = 'block';
+            } else {
+                nextQuestionBtn.textContent = gameState.language === 'ar' ? 'سؤال جديد' : 'New Question';
+                skipToVotingBtn.style.display = 'block';
+            }
+        }
+
+        function nextQuestion() {
+            gameState.currentQuestionIndex++;
+            showNextQuestion();
+        }
+
+        function skipToVoting() {
+            startVotingPhase();
+        }
+
+        function startVotingPhase() {
+            gameState.currentVoterIndex = 0;
+            gameState.votes = {};
+            showScreen('votingPhaseScreen');
+            showNextVoter();
+        }
+
+        function showNextVoter() {
+            if (gameState.currentVoterIndex >= gameState.players.length) {
+                calculateVotingResults();
+                return;
+            }
+            
+            const voter = gameState.players[gameState.currentVoterIndex];
+            const instruction = document.getElementById('votingInstruction');
+            const votingOptions = document.getElementById('votingOptions');
+            const submitBtn = document.getElementById('submitVoteBtn');
+            
+            // Update instruction
+            instruction.textContent = `${voter.name}، ${gameState.language === 'ar' ? 'صوت على اللي تعتقد إنه الكذاب' : 'vote for who you think is the liar'}`;
+            
+            // Create voting options
+            votingOptions.innerHTML = '';
+            gameState.players.forEach(player => {
+                if (player.name !== voter.name) {
+                    const button = document.createElement('button');
+                    button.className = 'vote-btn';
+                    button.textContent = player.name;
+                    button.onclick = () => selectVote(player.name);
+                    votingOptions.appendChild(button);
+                }
+            });
+            
+            // Reset submit button
+            submitBtn.disabled = true;
+            gameState.currentVote = null;
+            
+            // Show screen
+            showScreen('votingPhaseScreen');
+        }
+
+        function selectVote(playerName) {
+            // Remove selection from all buttons
+            document.querySelectorAll('.vote-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Add selection to clicked button
+            event.currentTarget.classList.add('selected');
+            
+            // Enable submit button
+            gameState.currentVote = playerName;
+            document.getElementById('submitVoteBtn').disabled = false;
+        }
+
+        function submitVote() {
+            const voter = gameState.players[gameState.currentVoterIndex];
+            voter.hasVoted = true;
+            gameState.votes[voter.name] = gameState.currentVote;
+            
+            // Increment votes for voted player
+            const votedPlayer = gameState.players.find(p => p.name === gameState.currentVote);
+            if (votedPlayer) {
+                votedPlayer.votesReceived++;
+            }
+            
+            gameState.currentVoterIndex++;
+            showNextVoter();
+        }
+
+        function calculateVotingResults() {
+            // Find player with most votes
+            let maxVotes = 0;
+            let eliminatedPlayer = null;
+            let tie = false;
+            
+            gameState.players.forEach(player => {
+                if (player.votesReceived > maxVotes) {
+                    maxVotes = player.votesReceived;
+                    eliminatedPlayer = player;
+                    tie = false;
+                } else if (player.votesReceived === maxVotes && maxVotes > 0) {
+                    tie = true;
+                }
+            });
+            
+            // Handle tie
+            if (tie) {
+                // In case of tie, randomly eliminate one of the tied players
+                const tiedPlayers = gameState.players.filter(p => p.votesReceived === maxVotes);
+                eliminatedPlayer = tiedPlayers[Math.floor(Math.random() * tiedPlayers.length)];
+            }
+            
+            // Store eliminated player
+            gameState.eliminatedPlayer = eliminatedPlayer;
+            
+            // Show liar choice screen if eliminated player is liar
+            if (eliminatedPlayer && eliminatedPlayer.isLiar) {
+                showLiarChoiceScreen();
+            } else {
+                showFinalResults();
+            }
+        }
+
+        function showLiarChoiceScreen() {
+            const instruction = document.getElementById('liarChoiceInstruction');
+            const wordChoices = document.getElementById('wordChoices');
+            const submitBtn = document.getElementById('submitLiarChoiceBtn');
+            
+            // Show which liar needs to choose
+            instruction.textContent = `${gameState.eliminatedPlayer.name}، ${gameState.language === 'ar' ? 'أنت الكذاب!' : 'You are the liar!'}`;
+            
+            // Generate 7 word choices including the correct one
+            const words = wordsDatabase[gameState.language];
+            const choices = [];
+            
+            // Add correct word
+            choices.push(gameState.correctWord);
+            
+            // Add 6 random words (avoid duplicates)
+            while (choices.length < 7) {
+                const randomWord = words[Math.floor(Math.random() * words.length)];
+                if (!choices.includes(randomWord) && randomWord !== gameState.correctWord) {
+                    choices.push(randomWord);
+                }
+            }
+            
+            // Shuffle the choices
+            for (let i = choices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [choices[i], choices[j]] = [choices[j], choices[i]];
+            }
+            
+            // Create choice buttons
+            wordChoices.innerHTML = '';
+            choices.forEach(word => {
+                const button = document.createElement('button');
+                button.className = 'word-choice-btn';
+                button.textContent = word;
+                button.onclick = () => selectWordChoice(word);
+                wordChoices.appendChild(button);
+            });
+            
+            // Reset submit button
+            submitBtn.disabled = true;
+            gameState.selectedWordChoice = null;
+            
+            showScreen('liarChoiceScreen');
+        }
+
+        function selectWordChoice(word) {
+            // Remove selection from all buttons
+            document.querySelectorAll('.word-choice-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Add selection to clicked button
+            event.currentTarget.classList.add('selected');
+            
+            // Enable submit button
+            gameState.selectedWordChoice = word;
+            document.getElementById('submitLiarChoiceBtn').disabled = false;
+        }
+
+        function submitLiarChoice() {
+            // Check if choice is correct
+            gameState.liarCorrectChoice = (gameState.selectedWordChoice === gameState.correctWord);
+            gameState.liarChoiceMade = true;
+            
+            showFinalResults();
+        }
+
+        function showFinalResults() {
+            const resultsBox = document.getElementById('resultsBox');
+            const playersReveal = document.getElementById('playersReveal');
+            
+            // Determine winner based on voting and liar choice
+            let winnerText = '';
+            let winnerColor = '';
+            let resultMessage = '';
+            
+            if (!gameState.eliminatedPlayer) {
+                // No one was eliminated
+                winnerText = gameState.language === 'ar' ? '🤔 تعادل!' : '🤔 Tie!';
+                winnerColor = '#ffd93d';
+                resultMessage = gameState.language === 'ar' ? 'ما في أحد طلع، اللعبة تعادلت' : 'No one was eliminated, game tied';
+            } else if (gameState.eliminatedPlayer.isLiar) {
+                // Liar was eliminated
+                if (gameState.liarChoiceMade) {
+                    if (gameState.liarCorrectChoice) {
+                        // Liar chose correctly
+                        winnerText = gameState.language === 'ar' ? '🎉 فاز الكذاب!' : '🎉 Liar Wins!';
+                        winnerColor = '#ff6b6b';
+                        resultMessage = gameState.language === 'ar' 
+                            ? `${gameState.eliminatedPlayer.name} كان الكذاب واختار الكلمة الصحيحة!`
+                            : `${gameState.eliminatedPlayer.name} was the liar and chose correctly!`;
+                    } else {
+                        // Liar chose wrong
+                        winnerText = gameState.language === 'ar' ? '🎉 فاز اللاعبون العاديون!' : '🎉 Normal Players Win!';
+                        winnerColor = '#6bcf7f';
+                        resultMessage = gameState.language === 'ar' 
+                            ? `${gameState.eliminatedPlayer.name} كان الكذاب لكن اختار الكلمة الخطأ`
+                            : `${gameState.eliminatedPlayer.name} was the liar but chose wrong`;
+                    }
+                } else {
+                    // Liar was eliminated before choice phase
+                    winnerText = gameState.language === 'ar' ? '🎉 فاز اللاعبون العاديون!' : '🎉 Normal Players Win!';
+                    winnerColor = '#6bcf7f';
+                    resultMessage = gameState.language === 'ar' 
+                        ? `شككم صح! ${gameState.eliminatedPlayer.name} كان الكذاب`
+                        : `You were right! ${gameState.eliminatedPlayer.name} was the liar`;
+                }
+            } else {
+                // Normal player was eliminated
+                winnerText = gameState.language === 'ar' ? '🎭 فاز الكذاب/الكذابين!' : '🎭 Liar/Liars Win!';
+                winnerColor = '#ff6b6b';
+                resultMessage = gameState.language === 'ar' 
+                    ? `${gameState.eliminatedPlayer.name} كان بريء! الكذاب/الكذابين خدعوكم`
+                    : `${gameState.eliminatedPlayer.name} was innocent! Liar/Liars tricked you`;
+            }
+            
+            // Set results text
+            resultsBox.innerHTML = `
+                <h2 class="winner-text" style="color: ${winnerColor};">${winnerText}</h2>
+                <p style="font-size: 1.3em; margin: 20px 0;">${resultMessage}</p>
+                <p style="color: #ffd93d; margin: 15px 0;">
+                    ${gameState.language === 'ar' ? 'الكلمة الصحيحة كانت:' : 'Correct word was:'} 
+                    <strong>${gameState.correctWord}</strong>
+                </p>
+            `;
+            resultsBox.style.borderColor = winnerColor;
+            
+            // Show all players and their roles
+            playersReveal.innerHTML = '';
+            gameState.players.forEach(player => {
+                const card = document.createElement('div');
+                card.className = `player-card ${player.isLiar ? 'liar' : 'normal'}`;
+                
+                let roleText = '';
+                if (gameState.language === 'ar') {
+                    roleText = player.isLiar ? '🎭 كذاب' : '👤 لاعب عادي';
+                } else {
+                    roleText = player.isLiar ? '🎭 Liar' : '👤 Normal Player';
+                }
+                
+                card.innerHTML = `
+                    <h4 style="margin-bottom: 10px;">${player.name}</h4>
+                    <p style="color: ${player.isLiar ? '#ff6b6b' : '#4ecdc4'}; font-weight: 600;">
+                        ${roleText}
+                    </p>
+                    <p style="margin-top: 10px; font-size: 0.9em;">
+                        ${gameState.language === 'ar' ? 'الأصوات:' : 'Votes:'} ${player.votesReceived}
+                    </p>
+                `;
+                playersReveal.appendChild(card);
+            });
+            
+            showScreen('resultsScreen');
+        }
+
+        // Settings functions
+        function setTextSize(size) {
+            gameState.settings.textSize = size;
+            document.body.classList.remove('large-text', 'xlarge-text');
+            if (size !== 'normal') {
+                document.body.classList.add(size + '-text');
+            }
+        }
+
+        function setButtonSize(size) {
+            gameState.settings.buttonSize = size;
+            document.body.classList.remove('large-buttons', 'xlarge-buttons');
+            if (size !== 'normal') {
+                document.body.classList.add(size + '-buttons');
+            }
+        }
+
+        function saveSettings() {
+            gameState.settings.sound = document.getElementById('soundToggle').checked;
+            gameState.settings.vibration = document.getElementById('vibrationToggle').checked;
+            gameState.settings.showRole = document.getElementById('showRoleToggle').checked;
+            gameState.settings.hints = document.getElementById('hintsToggle').checked;
+            
+            localStorage.setItem('alKadhabSettings', JSON.stringify(gameState.settings));
+            alert(gameState.language === 'ar' ? '✅ الإعدادات حفظت' : '✅ Settings saved');
+            showScreen('menuScreen');
+        }
+
+        function loadSettings() {
+            const saved = localStorage.getItem('alKadhabSettings');
+            if (saved) {
+                gameState.settings = JSON.parse(saved);
+                
+                // Apply settings
+                setTextSize(gameState.settings.textSize);
+                setButtonSize(gameState.settings.buttonSize);
+            }
+        }
+
+        // Utility functions
+        function playAgain() {
+            // Reset game state
+            gameState.players.forEach(player => {
+                player.isLiar = false;
+                player.hasVoted = false;
+                player.votesReceived = 0;
+            });
+            
+            gameState.currentPlayerIndex = 0;
+            gameState.currentPhase = 'word';
+            gameState.votes = {};
+            gameState.currentQuestionIndex = 0;
+            gameState.currentVoterIndex = 0;
+            gameState.liarChoiceMade = false;
+            gameState.liarCorrectChoice = false;
+            gameState.eliminatedPlayer = null;
+            gameState.selectedWordChoice = null;
+            
+            // Keep same players, restart game
+            startGameSession();
+        }
+
+        function startGame() {
+            showScreen('playerSetupScreen');
+        }
+
+        // Initialize game on load
+        window.onload = initGame;
+    </script>
 </body>
 </html>
